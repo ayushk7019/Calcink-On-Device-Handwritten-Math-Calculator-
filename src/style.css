@@ -17,3 +17,21 @@ body {
   background: #fdfaf3;
   touch-action: none; /* stops the page scrolling while drawing on touch */
 }
+#toolbar {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  font: 14px system-ui, sans-serif;
+}
