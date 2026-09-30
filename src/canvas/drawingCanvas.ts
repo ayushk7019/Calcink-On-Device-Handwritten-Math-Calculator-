@@ -1,0 +1,160 @@
+import { screenToCanvas } from "./coordinates";
+import type { Point, Stroke } from "./types";
+
+export class DrawingCanvas {
+  private ctx: CanvasRenderingContext2D;
+  private strokes: Stroke[] = [];
+  private redoStack: Stroke[] = [];
+  private currentStroke: Stroke | null = null;
+  private nextId = 1;
+  private strokeWidth = 3;
+  private cssWidth = 0;
+  private cssHeight = 0;
+
+  constructor(private canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Could not get canvas context");
+    this.ctx = ctx;
+
+    this.attachEvents();
+    this.resize();
+  }
+
+  private resize = () => {
+    const rect = this.canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+
+    this.cssWidth = rect.width;
+    this.cssHeight = rect.height;
+
+    // Setting width/height clears the canvas AND resets all context state.
+    this.canvas.width = Math.round(rect.width * dpr);
+    this.canvas.height = Math.round(rect.height * dpr);
+
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.applyStyle(); // must come after the size change
+    this.render();
+  };
+
+  private applyStyle() {
+    this.ctx.lineCap = "round";
+    this.ctx.lineJoin = "round";
+    this.ctx.strokeStyle = "#1a1a1a";
+    this.ctx.fillStyle = "#1a1a1a";
+  }
+
+  private attachEvents() {
+    this.canvas.addEventListener("pointerdown", this.onPointerDown);
+    this.canvas.addEventListener("pointermove", this.onPointerMove);
+    this.canvas.addEventListener("pointerup", this.onPointerUp);
+    this.canvas.addEventListener("pointercancel", this.onPointerCancel);
+    window.addEventListener("resize", this.resize);
+  }
+
+  private getPoints(event: PointerEvent): Point[] {
+    const coalesced = event.getCoalescedEvents?.() ?? [];
+    const events = coalesced.length > 0 ? coalesced : [event];
+    const rect = this.canvas.getBoundingClientRect();
+
+    return events.map((e) => {
+      const pos = screenToCanvas(e.clientX, e.clientY, rect);
+      return { x: pos.x, y: pos.y, time: e.timeStamp };
+    });
+  }
+
+  private onPointerDown = (event: PointerEvent) => {
+    if (!event.isPrimary) return; // ignore extra fingers
+    event.preventDefault();
+    this.canvas.setPointerCapture(event.pointerId);
+
+    this.currentStroke = {
+      id: this.nextId++,
+      width: this.strokeWidth,
+      points: this.getPoints(event),
+    };
+    this.render();
+  };
+
+  private onPointerMove = (event: PointerEvent) => {
+    if (!this.currentStroke || !event.isPrimary) return;
+    event.preventDefault();
+
+    this.currentStroke.points.push(...this.getPoints(event));
+    this.render();
+  };
+
+  private onPointerUp = (event: PointerEvent) => {
+    if (!this.currentStroke || !event.isPrimary) return;
+    event.preventDefault();
+
+    // No extra point here: a tap stays a 1-point stroke so it draws as a dot.
+    this.strokes.push(this.currentStroke);
+    this.redoStack = [];
+    this.currentStroke = null;
+    this.render();
+  };
+
+  private onPointerCancel = () => {
+    this.currentStroke = null;
+    this.render();
+  };
+
+  private drawStroke(stroke: Stroke) {
+    const p = stroke.points;
+    if (p.length === 0) return;
+
+    this.ctx.lineWidth = stroke.width;
+
+    if (p.length === 1) {
+      this.ctx.beginPath();
+      this.ctx.arc(p[0].x, p[0].y, stroke.width / 2, 0, Math.PI * 2);
+      this.ctx.fill();
+      return;
+    }
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(p[0].x, p[0].y);
+
+    // Each point is a control point; the curve ends at the midpoint to the next.
+    for (let i = 1; i < p.length - 1; i++) {
+      const midX = (p[i].x + p[i + 1].x) / 2;
+      const midY = (p[i].y + p[i + 1].y) / 2;
+      this.ctx.quadraticCurveTo(p[i].x, p[i].y, midX, midY);
+    }
+
+    const last = p[p.length - 1];
+    this.ctx.lineTo(last.x, last.y);
+    this.ctx.stroke();
+  }
+
+  private render() {
+    this.ctx.clearRect(0, 0, this.cssWidth, this.cssHeight);
+
+    for (const stroke of this.strokes) this.drawStroke(stroke);
+    if (this.currentStroke) this.drawStroke(this.currentStroke);
+  }
+
+  undo() {
+    const stroke = this.strokes.pop();
+    if (stroke) {
+      this.redoStack.push(stroke);
+      this.render();
+    }
+  }
+
+  redo() {
+    const stroke = this.redoStack.pop();
+    if (stroke) {
+      this.strokes.push(stroke);
+      this.render();
+    }
+  }
+
+  setStrokeWidth(width: number) {
+    this.strokeWidth = width;
+  }
+
+  getStrokes(): readonly Stroke[] {
+    return this.strokes;
+  }
+}
