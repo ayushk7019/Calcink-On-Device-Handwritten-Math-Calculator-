@@ -3,6 +3,7 @@ import { StrokeHistory } from "./history";
 import type { Point, Stroke } from "./types";
 
 export class DrawingCanvas {
+  private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private history = new StrokeHistory();
   private currentStroke: Stroke | null = null;
@@ -11,7 +12,9 @@ export class DrawingCanvas {
   private cssWidth = 0;
   private cssHeight = 0;
 
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement) {
+    this.canvas = canvas;
+
     const ctx = canvas.getContext("2d");
 
     if (!ctx) {
@@ -124,6 +127,7 @@ export class DrawingCanvas {
 
     if (p.length === 1) {
       this.ctx.beginPath();
+
       this.ctx.arc(
         p[0].x,
         p[0].y,
@@ -131,7 +135,9 @@ export class DrawingCanvas {
         0,
         Math.PI * 2
       );
+
       this.ctx.fill();
+
       return;
     }
 
@@ -157,7 +163,12 @@ export class DrawingCanvas {
   }
 
   private render() {
-    this.ctx.clearRect(0, 0, this.cssWidth, this.cssHeight);
+    this.ctx.clearRect(
+      0,
+      0,
+      this.cssWidth,
+      this.cssHeight
+    );
 
     for (const stroke of this.history.all) {
       this.drawStroke(stroke);

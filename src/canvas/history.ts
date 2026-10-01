@@ -6,19 +6,23 @@ export class StrokeHistory {
 
   commit(stroke: Stroke) {
     this.strokes.push(stroke);
-    this.redoStack = []; // a new action invalidates the redo branch
+    this.redoStack = [];
   }
 
   undo(): boolean {
     const s = this.strokes.pop();
+
     if (!s) return false;
+
     this.redoStack.push(s);
     return true;
   }
 
   redo(): boolean {
     const s = this.redoStack.pop();
+
     if (!s) return false;
+
     this.strokes.push(s);
     return true;
   }
