@@ -1,16 +1,11 @@
 import type { Stroke } from "../canvas/types";
-import {
-  evaluate,
-  type EvalResult,
-} from "../math/evaluate";
-import {
-  segmentStrokes,
-  type Rect,
-} from "./segment";
+import { evaluate, type EvalResult } from "../math/evaluate";
+import { segmentStrokes, type Rect } from "./segment";
 
 export type Classification = {
   label: string;
   confidence: number;
+  raw?: string;
 };
 
 export type Classifier = (
@@ -38,18 +33,20 @@ export async function recognizeExpression(
   const refHeight = Math.max(
     0,
     ...groups.map(
-      (group) =>
-        group.rect.bottom - group.rect.top
+      (group) => group.rect.bottom - group.rect.top
     )
   );
 
   const symbols: RecognizedSymbol[] = [];
 
   for (const group of groups) {
-    const size = Math.max(
-      group.rect.right - group.rect.left,
-      group.rect.bottom - group.rect.top
-    );
+    const width =
+      group.rect.right - group.rect.left;
+
+    const height =
+      group.rect.bottom - group.rect.top;
+
+    const size = Math.max(width, height);
 
     const classification: Classification =
       refHeight > 0 &&
@@ -57,6 +54,7 @@ export async function recognizeExpression(
         ? {
             label: ".",
             confidence: 1,
+            raw: ".",
           }
         : await classify(group.strokes);
 

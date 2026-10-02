@@ -111,15 +111,16 @@ describe("recognizeExpression", () => {
         ]),
       ];
 
-      const out = await recognizeExpression(
-        strokes,
-        fake({
-          1: "1",
-          2: "×",
-          3: "5",
-          4: "=",
-        })
-      );
+      const out =
+        await recognizeExpression(
+          strokes,
+          fake({
+            1: "1",
+            2: "×",
+            3: "5",
+            4: "=",
+          })
+        );
 
       expect(out.text).toBe("1.5=");
 
@@ -133,56 +134,69 @@ describe("recognizeExpression", () => {
   test(
     "18+4×3= is segmented, joined and evaluated",
     async () => {
-      const out = await recognizeExpression(
-        expression18,
-        fake(labels18)
-      );
+      const out =
+        await recognizeExpression(
+          expression18,
+          fake(labels18)
+        );
 
-      expect(out.text).toBe("18+4×3=");
+      expect(out.text).toBe(
+        "18+4×3="
+      );
 
       expect(out.result).toEqual({
         ok: true,
         value: 30,
       });
 
-      expect(out.symbols).toHaveLength(7);
+      expect(out.symbols).toHaveLength(
+        7
+      );
     }
   );
 
   test(
     "drawing order does not matter, only position",
     async () => {
-      const shuffled = [...expression18].reverse();
+      const shuffled =
+        [...expression18].reverse();
 
-      const out = await recognizeExpression(
-        shuffled,
-        fake({
-          1: "1",
-          2: "8",
-          3: "+",
-          4: "+",
-          5: "4",
-          6: "×",
-          7: "×",
-          8: "3",
-          9: "=",
-          10: "=",
-        })
+      const out =
+        await recognizeExpression(
+          shuffled,
+          fake({
+            1: "1",
+            2: "8",
+            3: "+",
+            4: "+",
+            5: "4",
+            6: "×",
+            7: "×",
+            8: "3",
+            9: "=",
+            10: "=",
+          })
+        );
+
+      expect(out.text).toBe(
+        "18+4×3="
       );
-
-      expect(out.text).toBe("18+4×3=");
     }
   );
 
   test(
     "expression without trailing = is not evaluated",
     async () => {
-      const out = await recognizeExpression(
-        expression18.slice(0, 8),
-        fake(labels18)
+      const out =
+        await recognizeExpression(
+          expression18.slice(0, 8),
+          fake(labels18)
+        );
+
+      expect(out.text).toBe(
+        "18+4×3"
       );
 
-      expect(out.text).toBe("18+4×3");
       expect(out.result).toBeNull();
     }
   );
@@ -217,15 +231,16 @@ describe("recognizeExpression", () => {
         ]),
       ];
 
-      const out = await recognizeExpression(
-        strokes,
-        fake({
-          1: "5",
-          2: "÷",
-          3: "0",
-          4: "=",
-        })
-      );
+      const out =
+        await recognizeExpression(
+          strokes,
+          fake({
+            1: "5",
+            2: "÷",
+            3: "0",
+            4: "=",
+          })
+        );
 
       expect(out.result).toEqual({
         ok: false,
@@ -262,15 +277,16 @@ describe("recognizeExpression", () => {
         ]),
       ];
 
-      const out = await recognizeExpression(
-        strokes,
-        fake({
-          1: "2",
-          2: "X",
-          3: "3",
-          4: "=",
-        })
-      );
+      const out =
+        await recognizeExpression(
+          strokes,
+          fake({
+            1: "2",
+            2: "X",
+            3: "3",
+            4: "=",
+          })
+        );
 
       expect(out.result).toEqual({
         ok: false,
@@ -282,10 +298,11 @@ describe("recognizeExpression", () => {
   test(
     "empty canvas gives no symbols and no result",
     async () => {
-      const out = await recognizeExpression(
-        [],
-        fake({})
-      );
+      const out =
+        await recognizeExpression(
+          [],
+          fake({})
+        );
 
       expect(out).toEqual({
         symbols: [],

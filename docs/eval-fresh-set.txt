@@ -1,0 +1,322 @@
+=== CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 9-4=
+main.ts:143 Number of groups: 4
+main.ts:148 [9] raw=[9] conf=96 w=16 h=35 x=162 y=145
+[-] raw=[-] conf=100 w=16 h=1 x=186 y=152
+[4] raw=[4] conf=99 w=17 h=36 x=227 y=139
+[=] raw=[=] conf=99 w=35 h=9 x=287 y=149
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 9-4=
+main.ts:143 Number of groups: 4
+main.ts:148 [9] raw=[9] conf=100 w=21 h=54 x=168 y=129
+[-] raw=[-] conf=100 w=25 h=1 x=213 y=147
+[4] raw=[4] conf=73 w=24 h=59 x=287 y=119
+[=] raw=[=] conf=100 w=38 h=15 x=349 y=137
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: Y1.-4=
+main.ts:143 Number of groups: 6
+main.ts:148 [Y] raw=[Y] conf=33 w=27 h=27 x=159 y=113
+[1] raw=[1] conf=100 w=2 h=56 x=182 y=114
+[.] raw=[.] conf=100 w=0 h=3 x=184 y=117
+[-] raw=[-] conf=100 w=39 h=0 x=210 y=132
+[4] raw=[4] conf=99 w=28 h=50 x=279 y=111
+[=] raw=[=] conf=100 w=61 h=14 x=338 y=134
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 9-4=
+main.ts:143 Number of groups: 4
+main.ts:148 [9] raw=[9] conf=97 w=28 h=68 x=158 y=113
+[-] raw=[-] conf=100 w=30 h=0 x=220 y=145
+[4] raw=[4] conf=90 w=35 h=66 x=289 y=110
+[=] raw=[=] conf=100 w=50 h=18 x=350 y=133
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 6×7=
+main.ts:143 Number of groups: 4
+main.ts:148 [6] raw=[6] conf=98 w=26 h=52 x=181 y=166
+[×] raw=[×] conf=100 w=26 h=41 x=231 y=165
+[7] raw=[7] conf=99 w=34 h=46 x=276 y=161
+[=] raw=[=] conf=99 w=36 h=17 x=350 y=174
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 6×7=
+main.ts:143 Number of groups: 4
+main.ts:148 [6] raw=[6] conf=100 w=46 h=67 x=166 y=117
+[×] raw=[×] conf=100 w=39 h=50 x=235 y=118
+[7] raw=[7] conf=98 w=45 h=46 x=289 y=125
+[=] raw=[=] conf=100 w=51 h=15 x=362 y=141
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 6×7=
+main.ts:143 Number of groups: 4
+main.ts:148 [6] raw=[6] conf=100 w=33 h=63 x=152 y=113
+[×] raw=[×] conf=100 w=25 h=42 x=215 y=117
+[7] raw=[7] conf=99 w=28 h=47 x=265 y=117
+[=] raw=[=] conf=99 w=34 h=16 x=318 y=133
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 8÷4=
+main.ts:143 Number of groups: 4
+main.ts:148 [8] raw=[8] conf=100 w=40 h=70 x=182 y=168
+[÷] raw=[÷] conf=100 w=32 h=30 x=263 y=174
+[4] raw=[4] conf=98 w=26 h=74 x=323 y=160
+[=] raw=[=] conf=99 w=32 h=16 x=387 y=192
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 8÷4=
+main.ts:143 Number of groups: 4
+main.ts:148 [8] raw=[8] conf=100 w=30 h=57 x=178 y=129
+[÷] raw=[÷] conf=100 w=25 h=36 x=247 y=138
+[4] raw=[4] conf=97 w=28 h=56 x=299 y=136
+[=] raw=[=] conf=99 w=49 h=16 x=342 y=145
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 8÷4=
+main.ts:143 Number of groups: 4
+main.ts:148 [8] raw=[8] conf=100 w=38 h=63 x=158 y=117
+[÷] raw=[÷] conf=100 w=25 h=33 x=234 y=133
+[4] raw=[4] conf=98 w=25 h=74 x=290 y=111
+[=] raw=[=] conf=97 w=65 h=19 x=334 y=145
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 3.2+1.8=
+main.ts:143 Number of groups: 8
+main.ts:148 [3] raw=[3] conf=100 w=27 h=56 x=176 y=218
+[.] raw=[.] conf=100 w=0 h=0 x=215 y=261
+[2] raw=[2] conf=100 w=19 h=50 x=229 y=215
+[+] raw=[+] conf=100 w=26 h=34 x=274 y=218
+[1] raw=[1] conf=100 w=2 h=64 x=335 y=203
+[.] raw=[.] conf=100 w=0 h=0 x=350 y=255
+[8] raw=[8] conf=100 w=19 h=62 x=373 y=202
+[=] raw=[=] conf=100 w=36 h=15 x=440 y=218
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 3.2+1.8=
+main.ts:143 Number of groups: 8
+main.ts:148 [3] raw=[3] conf=100 w=34 h=61 x=156 y=157
+[.] raw=[.] conf=100 w=0 h=0 x=205 y=202
+[2] raw=[2] conf=100 w=22 h=52 x=220 y=157
+[+] raw=[+] conf=100 w=26 h=43 x=280 y=154
+[1] raw=[1] conf=100 w=1 h=54 x=341 y=145
+[.] raw=[.] conf=100 w=1 h=1 x=358 y=192
+[8] raw=[8] conf=100 w=23 h=60 x=378 y=142
+[=] raw=[=] conf=99 w=31 h=15 x=431 y=161
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 3.2+1.8=
+main.ts:143 Number of groups: 8
+main.ts:148 [3] raw=[3] conf=100 w=22 h=54 x=178 y=156
+[.] raw=[.] conf=100 w=0 h=0 x=213 y=205
+[2] raw=[2] conf=100 w=24 h=53 x=222 y=157
+[+] raw=[+] conf=100 w=33 h=42 x=276 y=152
+[1] raw=[1] conf=100 w=2 h=62 x=354 y=147
+[.] raw=[.] conf=100 w=1 h=1 x=373 y=195
+[8] raw=[8] conf=100 w=22 h=61 x=398 y=141
+[=] raw=[=] conf=99 w=27 h=18 x=454 y=162
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 25×6=
+main.ts:143 Number of groups: 5
+main.ts:148 [2] raw=[2] conf=100 w=30 h=47 x=138 y=217
+[5] raw=[5] conf=100 w=22 h=47 x=195 y=215
+[×] raw=[×] conf=100 w=18 h=38 x=242 y=217
+[6] raw=[6] conf=54 w=25 h=50 x=282 y=211
+[=] raw=[=] conf=88 w=30 h=10 x=318 y=231
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 25×4=
+main.ts:143 Number of groups: 5
+main.ts:148 [2] raw=[2] conf=100 w=28 h=36 x=193 y=160
+[5] raw=[5] conf=100 w=27 h=59 x=241 y=144
+[×] raw=[×] conf=100 w=39 h=51 x=287 y=150
+[4] raw=[4] conf=98 w=23 h=49 x=363 y=149
+[=] raw=[=] conf=99 w=32 h=18 x=409 y=169
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 25×4=
+main.ts:143 Number of groups: 5
+main.ts:148 [2] raw=[2] conf=100 w=38 h=54 x=174 y=155
+[5] raw=[5] conf=100 w=25 h=59 x=243 y=152
+[×] raw=[×] conf=100 w=38 h=55 x=290 y=151
+[4] raw=[4] conf=79 w=30 h=70 x=351 y=141
+[=] raw=[=] conf=98 w=33 h=18 x=406 y=167
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 25×4=
+main.ts:143 Number of groups: 5
+main.ts:148 [2] raw=[2] conf=99 w=38 h=49 x=175 y=138
+[5] raw=[5] conf=100 w=34 h=57 x=237 y=132
+[×] raw=[×] conf=100 w=41 h=60 x=284 y=129
+[4] raw=[4] conf=99 w=30 h=70 x=353 y=126
+[=] raw=[=] conf=99 w=38 h=16 x=403 y=152
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 100-37=
+main.ts:143 Number of groups: 7
+main.ts:148 [1] raw=[1] conf=100 w=9 h=56 x=160 y=143
+[0] raw=[0] conf=99 w=39 h=54 x=187 y=146
+[0] raw=[0] conf=100 w=28 h=47 x=249 y=145
+[-] raw=[-] conf=100 w=29 h=0 x=308 y=160
+[3] raw=[3] conf=100 w=26 h=42 x=380 y=141
+[7] raw=[7] conf=99 w=32 h=35 x=418 y=137
+[=] raw=[=] conf=100 w=45 h=15 x=480 y=147
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 100-37=
+main.ts:143 Number of groups: 7
+main.ts:148 [1] raw=[1] conf=100 w=2 h=45 x=150 y=133
+[0] raw=[0] conf=100 w=30 h=48 x=181 y=129
+[0] raw=[0] conf=100 w=30 h=48 x=237 y=131
+[-] raw=[-] conf=100 w=27 h=2 x=298 y=145
+[3] raw=[3] conf=100 w=28 h=46 x=353 y=129
+[7] raw=[7] conf=98 w=26 h=38 x=393 y=127
+[=] raw=[=] conf=100 w=42 h=16 x=436 y=136
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 100-37=
+main.ts:143 Number of groups: 7
+main.ts:148 [1] raw=[1] conf=100 w=6 h=63 x=161 y=139
+[0] raw=[0] conf=100 w=39 h=51 x=189 y=146
+[0] raw=[0] conf=100 w=45 h=54 x=237 y=140
+[-] raw=[-] conf=100 w=29 h=2 x=314 y=155
+[3] raw=[3] conf=100 w=33 h=58 x=376 y=136
+[7] raw=[7] conf=93 w=26 h=64 x=430 y=126
+[=] raw=[=] conf=100 w=35 h=12 x=473 y=147
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 7+8÷2=
+main.ts:143 Number of groups: 6
+main.ts:148 [7] raw=[7] conf=97 w=54 h=54 x=94 y=163
+[+] raw=[+] conf=100 w=45 h=45 x=194 y=163
+[8] raw=[8] conf=100 w=32 h=54 x=327 y=143
+[÷] raw=[÷] conf=100 w=25 h=32 x=385 y=151
+[2] raw=[2] conf=100 w=26 h=48 x=424 y=145
+[=] raw=[=] conf=99 w=29 h=14 x=507 y=158
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 7+8÷2=
+main.ts:143 Number of groups: 6
+main.ts:148 [7] raw=[7] conf=97 w=53 h=61 x=122 y=147
+[+] raw=[+] conf=100 w=52 h=36 x=193 y=154
+[8] raw=[8] conf=100 w=38 h=53 x=289 y=133
+[÷] raw=[÷] conf=100 w=42 h=38 x=346 y=131
+[2] raw=[2] conf=99 w=46 h=50 x=407 y=125
+[=] raw=[=] conf=100 w=49 h=15 x=458 y=142
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 7+8÷2=
+main.ts:143 Number of groups: 6
+main.ts:148 [7] raw=[7] conf=99 w=33 h=46 x=144 y=140
+[+] raw=[+] conf=100 w=33 h=31 x=203 y=140
+[8] raw=[8] conf=100 w=27 h=44 x=275 y=127
+[÷] raw=[÷] conf=100 w=26 h=22 x=317 y=134
+[2] raw=[2] conf=99 w=36 h=36 x=360 y=129
+[=] raw=[=] conf=99 w=28 h=12 x=406 y=135
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 6×3-4=
+main.ts:143 Number of groups: 6
+main.ts:148 [6] raw=[6] conf=100 w=27 h=41 x=158 y=161
+[×] raw=[×] conf=100 w=24 h=35 x=206 y=153
+[3] raw=[3] conf=100 w=28 h=42 x=242 y=161
+[-] raw=[-] conf=100 w=32 h=2 x=310 y=176
+[4] raw=[4] conf=82 w=23 h=69 x=394 y=145
+[=] raw=[=] conf=99 w=30 h=17 x=438 y=172
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 6×3-4=
+main.ts:143 Number of groups: 6
+main.ts:148 [6] raw=[6] conf=100 w=33 h=55 x=173 y=143
+[×] raw=[×] conf=100 w=25 h=34 x=222 y=153
+[3] raw=[3] conf=100 w=23 h=54 x=269 y=145
+[-] raw=[-] conf=100 w=49 h=0 x=326 y=167
+[4] raw=[4] conf=94 w=20 h=52 x=409 y=141
+[=] raw=[=] conf=84 w=26 h=17 x=463 y=156
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 6×3-4=
+main.ts:143 Number of groups: 6
+main.ts:148 [6] raw=[6] conf=100 w=31 h=54 x=139 y=137
+[×] raw=[×] conf=100 w=36 h=42 x=186 y=138
+[3] raw=[3] conf=100 w=23 h=42 x=241 y=136
+[-] raw=[-] conf=100 w=43 h=0 x=295 y=149
+[4] raw=[4] conf=96 w=26 h=55 x=383 y=125
+[=] raw=[=] conf=97 w=26 h=16 x=429 y=135
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 0.5×6=
+main.ts:143 Number of groups: 6
+main.ts:148 [0] raw=[0] conf=100 w=23 h=34 x=168 y=165
+[.] raw=[.] conf=100 w=0 h=0 x=206 y=189
+[5] raw=[5] conf=100 w=16 h=43 x=218 y=162
+[×] raw=[×] conf=100 w=18 h=34 x=258 y=165
+[6] raw=[6] conf=100 w=17 h=37 x=290 y=156
+[=] raw=[=] conf=99 w=30 h=10 x=338 y=168
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 0.5×6=
+main.ts:143 Number of groups: 6
+main.ts:148 [0] raw=[0] conf=100 w=25 h=42 x=193 y=164
+[.] raw=[.] conf=100 w=0 h=0 x=234 y=196
+[5] raw=[5] conf=100 w=20 h=39 x=254 y=160
+[×] raw=[×] conf=100 w=18 h=31 x=297 y=157
+[6] raw=[6] conf=99 w=19 h=37 x=333 y=147
+[=] raw=[=] conf=100 w=36 h=13 x=384 y=165
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 0.5×6=
+main.ts:143 Number of groups: 6
+main.ts:148 [0] raw=[0] conf=100 w=38 h=45 x=165 y=153
+[.] raw=[.] conf=100 w=0 h=0 x=218 y=182
+[5] raw=[5] conf=100 w=24 h=48 x=234 y=151
+[×] raw=[×] conf=100 w=25 h=36 x=294 y=149
+[6] raw=[6] conf=100 w=28 h=36 x=338 y=145
+[=] raw=[=] conf=100 w=30 h=12 x=387 y=162
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 36÷9+2.5=
+main.ts:143 Number of groups: 9
+main.ts:148 [3] raw=[3] conf=100 w=34 h=55 x=114 y=217
+[6] raw=[6] conf=99 w=34 h=50 x=166 y=216
+[÷] raw=[÷] conf=100 w=35 h=30 x=218 y=220
+[9] raw=[9] conf=81 w=22 h=56 x=272 y=209
+[+] raw=[+] conf=100 w=34 h=34 x=321 y=217
+[2] raw=[2] conf=100 w=31 h=39 x=377 y=207
+[.] raw=[.] conf=100 w=0 h=0 x=423 y=237
+[5] raw=[5] conf=100 w=24 h=44 x=436 y=197
+[=] raw=[=] conf=100 w=42 h=15 x=499 y=213
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 36÷9+2.5=
+main.ts:143 Number of groups: 9
+main.ts:148 [3] raw=[3] conf=100 w=29 h=57 x=123 y=201
+[6] raw=[6] conf=100 w=37 h=68 x=169 y=196
+[÷] raw=[÷] conf=100 w=34 h=39 x=212 y=196
+[9] raw=[9] conf=77 w=28 h=62 x=277 y=185
+[+] raw=[+] conf=100 w=27 h=33 x=351 y=205
+[2] raw=[2] conf=99 w=32 h=42 x=398 y=195
+[.] raw=[.] conf=100 w=0 h=0 x=458 y=225
+[5] raw=[5] conf=100 w=24 h=54 x=478 y=190
+[=] raw=[=] conf=98 w=28 h=13 x=520 y=206
+main.ts:134 === CALCINK SEGMENTATION DEBUG ===
+main.ts:138 Recognized text: 36÷9+2.5=
+main.ts:143 Number of groups: 9
+main.ts:148 [3] raw=[3] conf=100 w=33 h=61 x=130 y=164
+[6] raw=[6] conf=100 w=20 h=46 x=186 y=162
+[÷] raw=[÷] conf=100 w=33 h=37 x=218 y=169
+[9] raw=[9] conf=99 w=18 h=47 x=273 y=161
+[+] raw=[+] conf=100 w=37 h=36 x=328 y=163
+[2] raw=[2] conf=100 w=35 h=48 x=386 y=157
+[.] raw=[.] conf=100 w=0 h=0 x=440 y=192
+[5] raw=[5] conf=100 w=26 h=52 x=453 y=151
+[=] raw=[=] conf=100 w=38 h=16 x=522 y=161
+Evaluation notes
+----------------
+Protocol: 10 expressions × 3 official attempts = 30 runs.
+
+Official result:
+Exact text accuracy = 29/30 = 96.7%.
+
+The one failed official run was:
+`9-4=` → `Y1.-4=`
+
+Failure analysis:
+- Expected symbol count: 4
+- Observed group count: 6
+- The first `9` was split into three groups, which were classified as
+  `Y`, `1`, and `.`
+- Therefore the failure involved segmentation followed by model
+  classification.
+
+Extra runs retained in the raw log:
+1. `9-4=` was retried once beyond the planned 3 attempts and passed.
+   Therefore `9-4=` passed 3 of 4 total attempts in the raw log.
+2. `25×6=` was an accidental extra test and was not part of the requested
+   evaluation set.
+
+These extra runs are retained for transparency and excluded from the
+official 30-run denominator.
+
+Caveats:
+- One writer
+- One device
+- Small sample size
+- Earlier evaluation sets were used while tuning recognition,
+  preprocessing, and segmentation.
+
+Note:
+The raw log records recognized text and debug information. Displayed-answer
+accuracy was not measured separately in this evaluation and is therefore not
+reported as a measured metric.

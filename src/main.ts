@@ -1,4 +1,5 @@
 import "./style.css";
+
 import { DrawingCanvas } from "./canvas/drawingCanvas";
 import { strokesToImageData } from "./recognition/preprocess";
 import { RecognitionClient } from "./recognition/recognitionClient";
@@ -6,201 +7,242 @@ import { postprocessLabel } from "./recognition/postprocess";
 import {
   recognizeExpression,
   type Classifier,
+  type ExpressionResult,
 } from "./recognition/pipeline";
+import { answerAnnotation } from "./recognition/answerLayout";
+import { RecognitionScheduler } from "./recognition/scheduler";
 import { formatResult } from "./math/evaluate";
 
 const canvas =
-  document.querySelector<HTMLCanvasElement>("#canvas");
+  document.querySelector<HTMLCanvasElement>(
+    "#canvas"
+  );
 
 if (!canvas) {
-  throw new Error("Canvas element not found");
+  throw new Error(
+    "Canvas element not found"
+  );
 }
 
-const board = new DrawingCanvas(canvas);
-const recognizer = new RecognitionClient();
+const board =
+  new DrawingCanvas(canvas);
 
-const $ = (id: string): HTMLElement => {
-  const element = document.getElementById(id);
+const recognizer =
+  new RecognitionClient();
+
+const $ = (
+  id: string
+): HTMLElement => {
+  const element =
+    document.getElementById(id);
 
   if (!element) {
-    throw new Error(`Element #${id} not found`);
+    throw new Error(
+      `Missing element: #${id}`
+    );
   }
 
   return element;
 };
 
-const prediction = $("prediction");
-const recognizeButton = $("recognize");
+const prediction =
+  $("prediction");
 
-$("undo").addEventListener("click", () => {
-  board.undo();
-});
+const undoButton =
+  $("undo") as HTMLButtonElement;
 
-$("redo").addEventListener("click", () => {
-  board.redo();
-});
+const redoButton =
+  $("redo") as HTMLButtonElement;
 
-$("clear").addEventListener("click", () => {
-  board.clear();
-  prediction.textContent = "Ready";
-});
+const clearButton =
+  $("clear") as HTMLButtonElement;
 
-$("width").addEventListener("input", (event) => {
-  const width = Number(
-    (event.target as HTMLInputElement).value
+const widthInput =
+  $("width") as HTMLInputElement;
+
+const classify: Classifier =
+  async (group) => {
+    const imageData =
+      strokesToImageData(group);
+
+    if (!imageData) {
+      return {
+        label: "?",
+        raw: "?",
+        confidence: 0,
+      };
+    }
+
+    const result =
+      await recognizer.recognize(
+        imageData
+      );
+
+    const label =
+      postprocessLabel(
+        group,
+        result.label
+      );
+
+    return {
+      label,
+      raw: result.label,
+      confidence:
+        result.confidence,
+    };
+  };
+
+function show(
+  output: ExpressionResult
+) {
+  if (
+    output.symbols.length === 0
+  ) {
+    board.setAnnotations([]);
+    prediction.textContent = "";
+    return;
+  }
+
+  const annotation =
+    answerAnnotation(output);
+
+  board.setAnnotations(
+    annotation
+      ? [annotation]
+      : []
   );
 
-  board.setStrokeWidth(width);
-});
-
-window.addEventListener("keydown", (event) => {
-  const mod =
-    event.ctrlKey || event.metaKey;
-
-  if (!mod) return;
-
-  const key =
-    event.key.toLowerCase();
-
-  if (key === "z" && event.shiftKey) {
-    event.preventDefault();
-    board.redo();
-  } else if (key === "z") {
-    event.preventDefault();
-    board.undo();
-  } else if (key === "y") {
-    event.preventDefault();
-    board.redo();
-  }
-});
-
-const classify: Classifier = async (group) => {
-  const imageData =
-    strokesToImageData(group);
-
-  if (!imageData) {
-    return {
-      label: "?",
-      confidence: 0,
-    };
+  if (!output.result) {
+    prediction.textContent =
+      output.text;
+    return;
   }
 
-  const result =
-    await recognizer.recognize(imageData);
+  if (!output.result.ok) {
+    if (
+      output.result.error ===
+      "undefined"
+    ) {
+      prediction.textContent =
+        `${output.text} Undefined`;
+    } else {
+      prediction.textContent =
+        `${output.text} Error`;
+    }
 
-  const label =
-    postprocessLabel(
-      group,
-      result.label
+    return;
+  }
+
+  const answer =
+    formatResult(
+      output.result.value
     );
 
-  return {
-    label,
-    confidence: result.confidence,
+  prediction.textContent =
+    `${output.text} ${answer}`;
+}
+
+function showError(
+  error: unknown
+) {
+  console.error(error);
+
+  board.setAnnotations([]);
+
+  prediction.textContent =
+    "Recognition failed";
+}
+
+const recognizeNow =
+  async (): Promise<ExpressionResult> => {
+    return recognizeExpression(
+      board.getStrokes(),
+      classify
+    );
   };
+
+const scheduler =
+  new RecognitionScheduler(
+    recognizeNow,
+    show,
+    showError,
+    600
+  );
+
+board.onChange = (
+  kind
+) => {
+  if (kind === "start") {
+    scheduler.cancel();
+    board.setAnnotations([]);
+    return;
+  }
+
+  scheduler.schedule();
 };
 
-recognizeButton.addEventListener(
+undoButton.addEventListener(
   "click",
-  async () => {
-    try {
-      const strokes =
-        board.getStrokes();
+  () => {
+    board.undo();
+  }
+);
 
-      if (strokes.length === 0) {
-        prediction.textContent =
-          "Draw something first";
-        return;
-      }
+redoButton.addEventListener(
+  "click",
+  () => {
+    board.redo();
+  }
+);
 
-      prediction.textContent =
-        "Recognizing...";
+clearButton.addEventListener(
+  "click",
+  () => {
+    board.clear();
+    prediction.textContent = "";
+  }
+);
 
-      recognizeButton.setAttribute(
-        "disabled",
-        "true"
-      );
+widthInput.addEventListener(
+  "input",
+  () => {
+    const width =
+      Number(widthInput.value);
 
-      const output =
-        await recognizeExpression(
-          strokes,
-          classify
-        );
+    if (Number.isFinite(width)) {
+      board.setStrokeWidth(width);
+    }
+  }
+);
 
-      console.log(
-        "=== CALCINK SEGMENTATION DEBUG ==="
-      );
+window.addEventListener(
+  "keydown",
+  (event) => {
+    if (
+      (event.ctrlKey ||
+        event.metaKey) &&
+      event.key.toLowerCase() ===
+        "z"
+    ) {
+      event.preventDefault();
 
-      console.log(
-        "Recognized text:",
-        output.text
-      );
-
-      console.log(
-        "Number of groups:",
-        output.symbols.length
-      );
-
-      console.log(
-        output.symbols
-          .map(
-            (symbol) =>
-              `${symbol.label}  conf=${Math.round(
-                symbol.confidence * 100
-              )}` +
-              `  w=${Math.round(
-                symbol.rect.right -
-                  symbol.rect.left
-              )}` +
-              `  h=${Math.round(
-                symbol.rect.bottom -
-                  symbol.rect.top
-              )}` +
-              `  x=${Math.round(
-                symbol.rect.left
-              )}` +
-              `  y=${Math.round(
-                symbol.rect.top
-              )}`
-          )
-          .join("\n")
-      );
-
-      if (!output.result) {
-        prediction.textContent =
-          output.text;
-        return;
-      }
-
-      let answer = "";
-
-      if (output.result.ok) {
-        answer = formatResult(
-          output.result.value
-        );
-      } else if (
-        output.result.error ===
-        "undefined"
-      ) {
-        answer = "Undefined";
+      if (event.shiftKey) {
+        board.redo();
       } else {
-        answer = "Error";
+        board.undo();
       }
 
-      prediction.textContent =
-        `${output.text} ${answer}`;
-    } catch (error: unknown) {
-      console.error(
-        "Recognition failed:",
-        error
-      );
+      return;
+    }
 
-      prediction.textContent =
-        "Recognition failed";
-    } finally {
-      recognizeButton.removeAttribute(
-        "disabled"
-      );
+    if (
+      (event.ctrlKey ||
+        event.metaKey) &&
+      event.key.toLowerCase() ===
+        "y"
+    ) {
+      event.preventDefault();
+      board.redo();
     }
   }
 );
@@ -210,17 +252,7 @@ recognizer
   .then(() => {
     prediction.textContent =
       "Model ready";
-
-    console.log(
-      "Sagyam worker model loaded"
-    );
   })
-  .catch((error: unknown) => {
-    prediction.textContent =
-      "Model failed to load";
-
-    console.error(
-      "Sagyam worker model failed to load:",
-      error
-    );
+  .catch((error) => {
+    showError(error);
   });
