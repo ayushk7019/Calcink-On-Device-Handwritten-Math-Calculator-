@@ -3,8 +3,14 @@ import { DrawingCanvas } from "./canvas/drawingCanvas";
 import { strokesToImageData } from "./recognition/preprocess";
 import { RecognitionClient } from "./recognition/recognitionClient";
 import { postprocessLabel } from "./recognition/postprocess";
+import {
+  recognizeExpression,
+  type Classifier,
+} from "./recognition/pipeline";
+import { formatResult } from "./math/evaluate";
 
-const canvas = document.querySelector<HTMLCanvasElement>("#canvas");
+const canvas =
+  document.querySelector<HTMLCanvasElement>("#canvas");
 
 if (!canvas) {
   throw new Error("Canvas element not found");
@@ -48,11 +54,13 @@ $("width").addEventListener("input", (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
-  const mod = event.ctrlKey || event.metaKey;
+  const mod =
+    event.ctrlKey || event.metaKey;
 
   if (!mod) return;
 
-  const key = event.key.toLowerCase();
+  const key =
+    event.key.toLowerCase();
 
   if (key === "z" && event.shiftKey) {
     event.preventDefault();
@@ -66,52 +74,151 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
-recognizeButton.addEventListener("click", async () => {
-  try {
-    const strokes = board.getStrokes();
+const classify: Classifier = async (group) => {
+  const imageData =
+    strokesToImageData(group);
 
-    if (strokes.length === 0) {
-      prediction.textContent = "Draw something first";
-      return;
-    }
-
-    prediction.textContent = "Recognizing...";
-    recognizeButton.setAttribute("disabled", "true");
-
-    const imageData = strokesToImageData(strokes);
-
-    if (!imageData) {
-      prediction.textContent = "Nothing to recognize";
-      return;
-    }
-
-    const result = await recognizer.recognize(imageData);
-
-    const label = postprocessLabel(strokes, result.label);
-
-    prediction.textContent =
-      `${label} (${(result.confidence * 100).toFixed(1)}%)`;
-
-    console.log("Recognition result:", {
-      ...result,
-      finalLabel: label,
-    });
-  } catch (error: unknown) {
-    console.error("Recognition failed:", error);
-    prediction.textContent = "Recognition failed";
-  } finally {
-    recognizeButton.removeAttribute("disabled");
+  if (!imageData) {
+    return {
+      label: "?",
+      confidence: 0,
+    };
   }
-});
+
+  const result =
+    await recognizer.recognize(imageData);
+
+  const label =
+    postprocessLabel(
+      group,
+      result.label
+    );
+
+  return {
+    label,
+    confidence: result.confidence,
+  };
+};
+
+recognizeButton.addEventListener(
+  "click",
+  async () => {
+    try {
+      const strokes =
+        board.getStrokes();
+
+      if (strokes.length === 0) {
+        prediction.textContent =
+          "Draw something first";
+        return;
+      }
+
+      prediction.textContent =
+        "Recognizing...";
+
+      recognizeButton.setAttribute(
+        "disabled",
+        "true"
+      );
+
+      const output =
+        await recognizeExpression(
+          strokes,
+          classify
+        );
+
+      console.log(
+        "=== CALCINK SEGMENTATION DEBUG ==="
+      );
+
+      console.log(
+        "Recognized text:",
+        output.text
+      );
+
+      console.log(
+        "Number of groups:",
+        output.symbols.length
+      );
+
+      console.log(
+        output.symbols
+          .map(
+            (symbol) =>
+              `${symbol.label}  conf=${Math.round(
+                symbol.confidence * 100
+              )}` +
+              `  w=${Math.round(
+                symbol.rect.right -
+                  symbol.rect.left
+              )}` +
+              `  h=${Math.round(
+                symbol.rect.bottom -
+                  symbol.rect.top
+              )}` +
+              `  x=${Math.round(
+                symbol.rect.left
+              )}` +
+              `  y=${Math.round(
+                symbol.rect.top
+              )}`
+          )
+          .join("\n")
+      );
+
+      if (!output.result) {
+        prediction.textContent =
+          output.text;
+        return;
+      }
+
+      let answer = "";
+
+      if (output.result.ok) {
+        answer = formatResult(
+          output.result.value
+        );
+      } else if (
+        output.result.error ===
+        "undefined"
+      ) {
+        answer = "Undefined";
+      } else {
+        answer = "Error";
+      }
+
+      prediction.textContent =
+        `${output.text} ${answer}`;
+    } catch (error: unknown) {
+      console.error(
+        "Recognition failed:",
+        error
+      );
+
+      prediction.textContent =
+        "Recognition failed";
+    } finally {
+      recognizeButton.removeAttribute(
+        "disabled"
+      );
+    }
+  }
+);
 
 recognizer
   .ready()
   .then(() => {
-    prediction.textContent = "Model ready";
-    console.log("Sagyam worker model loaded");
+    prediction.textContent =
+      "Model ready";
+
+    console.log(
+      "Sagyam worker model loaded"
+    );
   })
   .catch((error: unknown) => {
-    prediction.textContent = "Model failed to load";
+    prediction.textContent =
+      "Model failed to load";
+
     console.error(
       "Sagyam worker model failed to load:",
       error
