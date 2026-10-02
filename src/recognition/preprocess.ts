@@ -2,6 +2,7 @@ import type { Stroke } from "../canvas/types";
 import { squareBox } from "./geometry";
 
 const SIZE = 100;
+const PADDING_RATIO = 0.15;
 
 export function strokesToImageData(
   strokes: readonly Stroke[],
@@ -30,15 +31,27 @@ export function strokesToImageData(
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, SIZE, SIZE);
 
-  const scale = SIZE / box.size;
+  const paddedSize =
+    box.size * (1 + 2 * PADDING_RATIO);
+
+  const centerX = box.x + box.size / 2;
+  const centerY = box.y + box.size / 2;
+
+  const paddedX =
+    centerX - paddedSize / 2;
+
+  const paddedY =
+    centerY - paddedSize / 2;
+
+  const scale = SIZE / paddedSize;
 
   ctx.setTransform(
     scale,
     0,
     0,
     scale,
-    -box.x * scale,
-    -box.y * scale
+    -paddedX * scale,
+    -paddedY * scale
   );
 
   ctx.strokeStyle = ink;

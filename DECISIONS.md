@@ -528,5 +528,30 @@ strokes
 [group for 1] [group for +] [group for 2] [group for =]
   ↓
 1 + 2 =
+## Recognition preprocessing experiment: wider symbol margin
+
+The recognition crop was changed to enlarge the existing symbol margin before
+resizing the glyph to the model's 100×100 input.
+
+This was tested as a single fixed setting rather than sweeping multiple values.
+
+| Expression | Before | After |
+|---|---:|---:|
+| `100÷0=` | 1/5 | 5/5 |
+| `2+3×4-6÷2=` | 2/5 | 4/5 |
+
+The preprocessing margin changed from the existing 10% margin to the larger
+crop used in the current implementation. The resulting symbol occupancy was
+approximately 83% before versus 64% after.
+
+These measurements are from small samples and different drawing sessions.
+The expressions were also part of the tuning process, so these results are
+not treated as final recognition accuracy. The larger margin is retained
+because it produced a measured improvement on both tests.
+
+We do not claim a specific causal mechanism for the improvement. One possible
+explanation is that the resulting input has more surrounding empty space,
+which may better match the spatial distribution of the model's training
+examples, but this remains a hypothesis.
 
 ---
