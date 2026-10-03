@@ -48,6 +48,12 @@ const $ = (
 const prediction =
   $("prediction");
 
+const penButton =
+  $("pen") as HTMLButtonElement;
+
+const eraserButton =
+  $("eraser") as HTMLButtonElement;
+
 const undoButton =
   $("undo") as HTMLButtonElement;
 
@@ -169,6 +175,22 @@ const scheduler =
     600
   );
 
+function setTool(
+  tool: "pen" | "eraser"
+) {
+  board.setTool(tool);
+
+  penButton.setAttribute(
+    "aria-pressed",
+    String(tool === "pen")
+  );
+
+  eraserButton.setAttribute(
+    "aria-pressed",
+    String(tool === "eraser")
+  );
+}
+
 board.onChange = (
   kind
 ) => {
@@ -180,6 +202,20 @@ board.onChange = (
 
   scheduler.schedule();
 };
+
+penButton.addEventListener(
+  "click",
+  () => {
+    setTool("pen");
+  }
+);
+
+eraserButton.addEventListener(
+  "click",
+  () => {
+    setTool("eraser");
+  }
+);
 
 undoButton.addEventListener(
   "click",
@@ -246,6 +282,8 @@ window.addEventListener(
     }
   }
 );
+
+setTool("pen");
 
 recognizer
   .ready()

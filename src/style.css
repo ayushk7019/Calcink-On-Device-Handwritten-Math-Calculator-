@@ -7,7 +7,12 @@ body,
 }
 
 body {
-  overflow: hidden; /* no page scroll or bounce while drawing */
+  overflow: hidden;
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
 }
 
 #canvas {
@@ -15,23 +20,34 @@ body {
   width: 100%;
   height: 100%;
   background: #fdfaf3;
-  touch-action: none; /* stops the page scrolling while drawing on touch */
+  touch-action: none;
 }
+
 #toolbar {
   position: fixed;
   top: 12px;
   left: 12px;
   z-index: 10;
-
   display: flex;
   gap: 8px;
   align-items: center;
-
   padding: 6px 10px;
-
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid #ddd;
   border-radius: 8px;
+  font: 14px system-ui, sans-serif;
+}
 
+#toolbar button {
+  cursor: pointer;
+}
+
+#toolbar button[aria-pressed="true"] {
+  background: #1a5fb4;
+  color: #fff;
+}
+
+#prediction {
+  min-width: 150px;
   font: 14px system-ui, sans-serif;
 }

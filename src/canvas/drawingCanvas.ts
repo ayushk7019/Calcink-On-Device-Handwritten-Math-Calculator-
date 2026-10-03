@@ -1,4 +1,5 @@
 import { screenToCanvas } from "./coordinates";
+import { strokeHit } from "./hitTest";
 import { StrokeHistory } from "./history";
 import type { Annotation } from "../recognition/answerLayout";
 import type { Point, Stroke } from "./types";
@@ -19,14 +20,25 @@ export class DrawingCanvas {
   private cssWidth = 0;
   private cssHeight = 0;
 
+  private tool:
+    | "pen"
+    | "eraser" = "pen";
+
+  private erasing = new Set<number>();
+  private isErasing = false;
+  private eraserRadius = 10;
+
   onChange:
     | ((kind: CanvasChangeKind) => void)
     | null = null;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(
+    canvas: HTMLCanvasElement
+  ) {
     this.canvas = canvas;
 
-    const ctx = canvas.getContext("2d");
+    const ctx =
+      canvas.getContext("2d");
 
     if (!ctx) {
       throw new Error(
@@ -120,11 +132,12 @@ export class DrawingCanvas {
       this.canvas.getBoundingClientRect();
 
     return events.map((e) => {
-      const pos = screenToCanvas(
-        e.clientX,
-        e.clientY,
-        rect
-      );
+      const pos =
+        screenToCanvas(
+          e.clientX,
+          e.clientY,
+          rect
+        );
 
       return {
         x: pos.x,
@@ -132,6 +145,39 @@ export class DrawingCanvas {
         time: e.timeStamp,
       };
     });
+  }
+
+  private eraseAt(
+    event: PointerEvent
+  ) {
+    for (
+      const point of this.getPoints(event)
+    ) {
+      for (
+        const stroke of this.history.all
+      ) {
+        if (
+          this.erasing.has(
+            stroke.id
+          )
+        ) {
+          continue;
+        }
+
+        if (
+          strokeHit(
+            stroke,
+            point.x,
+            point.y,
+            this.eraserRadius
+          )
+        ) {
+          this.erasing.add(
+            stroke.id
+          );
+        }
+      }
+    }
   }
 
   private onPointerDown = (
@@ -151,10 +197,24 @@ export class DrawingCanvas {
       event.pointerId
     );
 
+    if (
+      this.tool === "eraser"
+    ) {
+      this.isErasing = true;
+      this.erasing.clear();
+
+      this.eraseAt(event);
+      this.render();
+
+      return;
+    }
+
     this.currentStroke = {
       id: this.nextId++,
       width: this.strokeWidth,
-      points: this.getPoints(event),
+      points: this.getPoints(
+        event
+      ),
     };
 
     this.render();
@@ -163,10 +223,20 @@ export class DrawingCanvas {
   private onPointerMove = (
     event: PointerEvent
   ) => {
-    if (
-      !this.currentStroke ||
-      !event.isPrimary
-    ) {
+    if (!event.isPrimary) {
+      return;
+    }
+
+    if (this.isErasing) {
+      event.preventDefault();
+
+      this.eraseAt(event);
+      this.render();
+
+      return;
+    }
+
+    if (!this.currentStroke) {
       return;
     }
 
@@ -182,10 +252,31 @@ export class DrawingCanvas {
   private onPointerUp = (
     event: PointerEvent
   ) => {
-    if (
-      !this.currentStroke ||
-      !event.isPrimary
-    ) {
+    if (!event.isPrimary) {
+      return;
+    }
+
+    if (this.isErasing) {
+      event.preventDefault();
+
+      this.isErasing = false;
+
+      const ids = [
+        ...this.erasing,
+      ];
+
+      this.history.erase(ids);
+
+      this.erasing.clear();
+
+      this.render();
+
+      this.onChange?.("commit");
+
+      return;
+    }
+
+    if (!this.currentStroke) {
       return;
     }
 
@@ -203,6 +294,9 @@ export class DrawingCanvas {
   };
 
   private onPointerCancel = () => {
+    this.isErasing = false;
+    this.erasing.clear();
+
     this.annotations = [];
     this.currentStroke = null;
 
@@ -252,10 +346,14 @@ export class DrawingCanvas {
       i++
     ) {
       const midX =
-        (p[i].x + p[i + 1].x) / 2;
+        (p[i].x +
+          p[i + 1].x) /
+        2;
 
       const midY =
-        (p[i].y + p[i + 1].y) / 2;
+        (p[i].y +
+          p[i + 1].y) /
+        2;
 
       this.ctx.quadraticCurveTo(
         p[i].x,
@@ -285,16 +383,19 @@ export class DrawingCanvas {
 
     this.ctx.save();
 
-    this.ctx.textBaseline = "middle";
+    this.ctx.textBaseline =
+      "middle";
 
     for (
-      const annotation of this.annotations
+      const annotation of
+      this.annotations
     ) {
       this.ctx.font =
         `${annotation.size}px system-ui, "Segoe UI", sans-serif`;
 
       this.ctx.fillStyle =
-        annotation.kind === "answer"
+        annotation.kind ===
+        "answer"
           ? "#1a5fb4"
           : "#b3261e";
 
@@ -321,8 +422,17 @@ export class DrawingCanvas {
     this.applyStyle();
 
     for (
-      const stroke of this.history.all
+      const stroke of
+      this.history.all
     ) {
+      if (
+        this.erasing.has(
+          stroke.id
+        )
+      ) {
+        continue;
+      }
+
       this.drawStroke(stroke);
     }
 
@@ -342,6 +452,17 @@ export class DrawingCanvas {
       [...annotations];
 
     this.render();
+  }
+
+  setTool(
+    tool: "pen" | "eraser"
+  ) {
+    this.tool = tool;
+
+    this.canvas.style.cursor =
+      tool === "eraser"
+        ? "crosshair"
+        : "default";
   }
 
   undo() {
@@ -364,6 +485,8 @@ export class DrawingCanvas {
     this.annotations = [];
     this.history.clear();
     this.currentStroke = null;
+    this.isErasing = false;
+    this.erasing.clear();
 
     this.render();
 
