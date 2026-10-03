@@ -630,8 +630,7 @@ Stage: **segmentation, followed by model classification of the fragments.** It i
 
 ### Runs outside the official denominator
 
-- One additional `9-4=` attempt was made after the planned three. Result: **[CONFIRM FROM docs/eval-fresh-set.txt: passed / failed]**. If it failed, `9-4=` failed 2 of 4 attempts overall and that should be stated here.
-- One `25×6=` run was written by accident and was not part of the test set.
+- One additional `9-4=` attempt was made after the planned three. Result: **passed**. Therefore, `9-4=` passed 3 of 4 total attempts in the raw log. The additional attempt is excluded from the official 30-run denominator.- One `25×6=` run was written by accident and was not part of the test set.
 
 Both are kept in the raw log (`docs/eval-fresh-set.txt`) and excluded from the 30-run denominator.
 
