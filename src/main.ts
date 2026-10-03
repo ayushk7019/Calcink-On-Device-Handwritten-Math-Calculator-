@@ -54,6 +54,9 @@ const penButton =
 const eraserButton =
   $("eraser") as HTMLButtonElement;
 
+const pixelButton =
+  $("pixel") as HTMLButtonElement;
+
 const undoButton =
   $("undo") as HTMLButtonElement;
 
@@ -175,20 +178,29 @@ const scheduler =
     600
   );
 
+const toolButtons = {
+  pen: penButton,
+  eraser: eraserButton,
+  pixel: pixelButton,
+};
+
 function setTool(
-  tool: "pen" | "eraser"
+  tool:
+    | "pen"
+    | "eraser"
+    | "pixel"
 ) {
   board.setTool(tool);
 
-  penButton.setAttribute(
-    "aria-pressed",
-    String(tool === "pen")
-  );
-
-  eraserButton.setAttribute(
-    "aria-pressed",
-    String(tool === "eraser")
-  );
+  for (
+    const [name, element] of
+    Object.entries(toolButtons)
+  ) {
+    element.setAttribute(
+      "aria-pressed",
+      String(name === tool)
+    );
+  }
 }
 
 board.onChange = (
@@ -214,6 +226,13 @@ eraserButton.addEventListener(
   "click",
   () => {
     setTool("eraser");
+  }
+);
+
+pixelButton.addEventListener(
+  "click",
+  () => {
+    setTool("pixel");
   }
 );
 
