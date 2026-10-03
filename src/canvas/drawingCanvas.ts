@@ -1,5 +1,6 @@
 import { screenToCanvas } from "./coordinates";
 import { strokeHit } from "./hitTest";
+import { erasePieces } from "./pixelErase";
 import { StrokeHistory } from "./history";
 import type { Annotation } from "../recognition/answerLayout";
 import type { Point, Stroke } from "./types";
@@ -22,11 +23,19 @@ export class DrawingCanvas {
 
   private tool:
     | "pen"
-    | "eraser" = "pen";
+    | "eraser"
+    | "pixel" = "pen";
 
   private erasing = new Set<number>();
   private isErasing = false;
   private eraserRadius = 10;
+
+  private pixelWork =
+    new Map<number, Point[][]>();
+
+  private lastEraser:
+    | { x: number; y: number }
+    | null = null;
 
   onChange:
     | ((kind: CanvasChangeKind) => void)
@@ -62,13 +71,15 @@ export class DrawingCanvas {
     this.cssWidth = rect.width;
     this.cssHeight = rect.height;
 
-    this.canvas.width = Math.round(
-      rect.width * dpr
-    );
+    this.canvas.width =
+      Math.round(
+        rect.width * dpr
+      );
 
-    this.canvas.height = Math.round(
-      rect.height * dpr
-    );
+    this.canvas.height =
+      Math.round(
+        rect.height * dpr
+      );
 
     this.ctx.setTransform(
       dpr,
@@ -86,8 +97,10 @@ export class DrawingCanvas {
   private applyStyle() {
     this.ctx.lineCap = "round";
     this.ctx.lineJoin = "round";
-    this.ctx.strokeStyle = "#1a1a1a";
-    this.ctx.fillStyle = "#1a1a1a";
+    this.ctx.strokeStyle =
+      "#1a1a1a";
+    this.ctx.fillStyle =
+      "#1a1a1a";
   }
 
   private attachEvents() {
@@ -121,7 +134,8 @@ export class DrawingCanvas {
     event: PointerEvent
   ): Point[] {
     const coalesced =
-      event.getCoalescedEvents?.() ?? [];
+      event.getCoalescedEvents?.() ??
+      [];
 
     const events =
       coalesced.length > 0
@@ -151,10 +165,13 @@ export class DrawingCanvas {
     event: PointerEvent
   ) {
     for (
-      const point of this.getPoints(event)
+      const point of this.getPoints(
+        event
+      )
     ) {
       for (
-        const stroke of this.history.all
+        const stroke of
+        this.history.all
       ) {
         if (
           this.erasing.has(
@@ -180,6 +197,171 @@ export class DrawingCanvas {
     }
   }
 
+  private eraseStep(
+    event: PointerEvent
+  ) {
+    if (
+      this.tool === "eraser"
+    ) {
+      this.eraseAt(event);
+    } else {
+      this.eraseSweep(event);
+    }
+  }
+
+  private eraseSweep(
+    event: PointerEvent
+  ) {
+    for (
+      const point of this.getPoints(
+        event
+      )
+    ) {
+      const from =
+        this.lastEraser ?? {
+          x: point.x,
+          y: point.y,
+        };
+
+      const distance =
+        Math.hypot(
+          point.x - from.x,
+          point.y - from.y
+        );
+
+      const steps =
+        Math.max(
+          1,
+          Math.ceil(
+            distance /
+              (this.eraserRadius /
+                2)
+          )
+        );
+
+      for (
+        let i = 1;
+        i <= steps;
+        i++
+      ) {
+        const t =
+          i / steps;
+
+        const x =
+          from.x +
+          (point.x -
+            from.x) *
+            t;
+
+        const y =
+          from.y +
+          (point.y -
+            from.y) *
+            t;
+
+        this.pixelEraseAt(
+          x,
+          y
+        );
+      }
+
+      this.lastEraser = {
+        x: point.x,
+        y: point.y,
+      };
+    }
+  }
+
+  private pixelEraseAt(
+    x: number,
+    y: number
+  ) {
+    for (
+      const stroke of
+      this.history.all
+    ) {
+      const base =
+        this.pixelWork.get(
+          stroke.id
+        ) ?? [stroke.points];
+
+      const next: Point[][] =
+        [];
+
+      let changed = false;
+
+      for (
+        const piece of base
+      ) {
+        const out =
+          erasePieces(
+            piece,
+            x,
+            y,
+            this.eraserRadius +
+              stroke.width / 2
+          );
+
+        if (out === null) {
+          next.push(piece);
+        } else {
+          changed = true;
+          next.push(...out);
+        }
+      }
+
+      if (changed) {
+        this.pixelWork.set(
+          stroke.id,
+          next
+        );
+      }
+    }
+  }
+
+  private commitPixelErase() {
+    const replacements: {
+      id: number;
+      pieces: Stroke[];
+    }[] = [];
+
+    for (
+      const stroke of
+      this.history.all
+    ) {
+      const work =
+        this.pixelWork.get(
+          stroke.id
+        );
+
+      if (!work) {
+        continue;
+      }
+
+      replacements.push({
+        id: stroke.id,
+        pieces:
+          work.map(
+            (points) => ({
+              id:
+                this.nextId++,
+              width:
+                stroke.width,
+              points,
+            })
+          ),
+      });
+    }
+
+    if (
+      replacements.length > 0
+    ) {
+      this.history.replace(
+        replacements
+      );
+    }
+  }
+
   private onPointerDown = (
     event: PointerEvent
   ) => {
@@ -198,12 +380,14 @@ export class DrawingCanvas {
     );
 
     if (
-      this.tool === "eraser"
+      this.tool !== "pen"
     ) {
       this.isErasing = true;
       this.erasing.clear();
+      this.pixelWork.clear();
+      this.lastEraser = null;
 
-      this.eraseAt(event);
+      this.eraseStep(event);
       this.render();
 
       return;
@@ -230,7 +414,7 @@ export class DrawingCanvas {
     if (this.isErasing) {
       event.preventDefault();
 
-      this.eraseAt(event);
+      this.eraseStep(event);
       this.render();
 
       return;
@@ -261,13 +445,19 @@ export class DrawingCanvas {
 
       this.isErasing = false;
 
-      const ids = [
-        ...this.erasing,
-      ];
-
-      this.history.erase(ids);
+      if (
+        this.tool === "eraser"
+      ) {
+        this.history.erase(
+          this.erasing
+        );
+      } else {
+        this.commitPixelErase();
+      }
 
       this.erasing.clear();
+      this.pixelWork.clear();
+      this.lastEraser = null;
 
       this.render();
 
@@ -296,6 +486,8 @@ export class DrawingCanvas {
   private onPointerCancel = () => {
     this.isErasing = false;
     this.erasing.clear();
+    this.pixelWork.clear();
+    this.lastEraser = null;
 
     this.annotations = [];
     this.currentStroke = null;
@@ -376,7 +568,8 @@ export class DrawingCanvas {
 
   private drawAnnotations() {
     if (
-      this.annotations.length === 0
+      this.annotations.length ===
+      0
     ) {
       return;
     }
@@ -433,7 +626,26 @@ export class DrawingCanvas {
         continue;
       }
 
-      this.drawStroke(stroke);
+      const work =
+        this.pixelWork.get(
+          stroke.id
+        );
+
+      if (work) {
+        for (
+          const points of work
+        ) {
+          this.drawStroke({
+            id: stroke.id,
+            width: stroke.width,
+            points,
+          });
+        }
+      } else {
+        this.drawStroke(
+          stroke
+        );
+      }
     }
 
     if (this.currentStroke) {
@@ -455,14 +667,17 @@ export class DrawingCanvas {
   }
 
   setTool(
-    tool: "pen" | "eraser"
+    tool:
+      | "pen"
+      | "eraser"
+      | "pixel"
   ) {
     this.tool = tool;
 
     this.canvas.style.cursor =
-      tool === "eraser"
-        ? "crosshair"
-        : "default";
+      tool === "pen"
+        ? "default"
+        : "crosshair";
   }
 
   undo() {
@@ -487,6 +702,8 @@ export class DrawingCanvas {
     this.currentStroke = null;
     this.isErasing = false;
     this.erasing.clear();
+    this.pixelWork.clear();
+    this.lastEraser = null;
 
     this.render();
 
