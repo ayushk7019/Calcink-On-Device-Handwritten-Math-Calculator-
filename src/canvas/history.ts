@@ -1,8 +1,9 @@
 import type { Stroke } from "./types";
 
-type Removed = {
+type Change = {
   index: number;
-  stroke: Stroke;
+  original: Stroke;
+  pieces: Stroke[];
 };
 
 type Action =
@@ -11,8 +12,8 @@ type Action =
       stroke: Stroke;
     }
   | {
-      type: "erase";
-      removed: Removed[];
+      type: "edit";
+      changes: Change[];
     };
 
 export class StrokeHistory {
@@ -20,48 +21,86 @@ export class StrokeHistory {
   private undoStack: Action[] = [];
   private redoStack: Action[] = [];
 
-  commit(stroke: Stroke) {
-    this.strokes.push(stroke);
+  commit(
+    stroke: Stroke
+  ) {
+    this.strokes.push(
+      stroke
+    );
+
     this.undoStack.push({
       type: "add",
       stroke,
     });
+
     this.redoStack = [];
   }
 
-  erase(ids: Iterable<number>): boolean {
-    const idSet = new Set(ids);
-    const removed: Removed[] = [];
+  replace(
+    replacements: {
+      id: number;
+      pieces: Stroke[];
+    }[]
+  ): boolean {
+    const byId =
+      new Map(
+        replacements.map(
+          (replacement) => [
+            replacement.id,
+            replacement.pieces,
+          ]
+        )
+      );
+
+    const changes: Change[] =
+      [];
 
     this.strokes.forEach(
       (stroke, index) => {
-        if (idSet.has(stroke.id)) {
-          removed.push({
+        const pieces =
+          byId.get(stroke.id);
+
+        if (pieces) {
+          changes.push({
             index,
-            stroke,
+            original: stroke,
+            pieces,
           });
         }
       }
     );
 
-    if (removed.length === 0) {
+    if (
+      changes.length === 0
+    ) {
       return false;
     }
 
-    this.strokes =
-      this.strokes.filter(
-        (stroke) =>
-          !idSet.has(stroke.id)
-      );
+    this.applyEdit(
+      changes
+    );
 
     this.undoStack.push({
-      type: "erase",
-      removed,
+      type: "edit",
+      changes,
     });
 
     this.redoStack = [];
 
     return true;
+  }
+
+  erase(
+    ids: Iterable<number>
+  ): boolean {
+    return this.replace(
+      [...ids].map(
+        (id) => ({
+          id,
+          pieces: [],
+        })
+      )
+    );
   }
 
   undo(): boolean {
@@ -72,25 +111,24 @@ export class StrokeHistory {
       return false;
     }
 
-    if (action.type === "add") {
+    if (
+      action.type === "add"
+    ) {
       this.strokes =
         this.strokes.filter(
           (stroke) =>
-            stroke !== action.stroke
+            stroke !==
+            action.stroke
         );
     } else {
-      for (
-        const removed of action.removed
-      ) {
-        this.strokes.splice(
-          removed.index,
-          0,
-          removed.stroke
-        );
-      }
+      this.revertEdit(
+        action.changes
+      );
     }
 
-    this.redoStack.push(action);
+    this.redoStack.push(
+      action
+    );
 
     return true;
   }
@@ -103,26 +141,21 @@ export class StrokeHistory {
       return false;
     }
 
-    if (action.type === "add") {
+    if (
+      action.type === "add"
+    ) {
       this.strokes.push(
         action.stroke
       );
     } else {
-      const erased = new Set(
-        action.removed.map(
-          (removed) =>
-            removed.stroke
-        )
+      this.applyEdit(
+        action.changes
       );
-
-      this.strokes =
-        this.strokes.filter(
-          (stroke) =>
-            !erased.has(stroke)
-        );
     }
 
-    this.undoStack.push(action);
+    this.undoStack.push(
+      action
+    );
 
     return true;
   }
@@ -135,5 +168,70 @@ export class StrokeHistory {
 
   get all(): readonly Stroke[] {
     return this.strokes;
+  }
+
+  private applyEdit(
+    changes: Change[]
+  ) {
+    const pieces =
+      new Map(
+        changes.map(
+          (change) => [
+            change.original,
+            change.pieces,
+          ]
+        )
+      );
+
+    const next: Stroke[] =
+      [];
+
+    for (
+      const stroke of
+      this.strokes
+    ) {
+      const replacement =
+        pieces.get(stroke);
+
+      if (replacement) {
+        next.push(
+          ...replacement
+        );
+      } else {
+        next.push(stroke);
+      }
+    }
+
+    this.strokes = next;
+  }
+
+  private revertEdit(
+    changes: Change[]
+  ) {
+    const gone =
+      new Set(
+        changes.flatMap(
+          (change) =>
+            change.pieces
+        )
+      );
+
+    const rest =
+      this.strokes.filter(
+        (stroke) =>
+          !gone.has(stroke)
+      );
+
+    for (
+      const change of changes
+    ) {
+      rest.splice(
+        change.index,
+        0,
+        change.original
+      );
+    }
+
+    this.strokes = rest;
   }
 }
