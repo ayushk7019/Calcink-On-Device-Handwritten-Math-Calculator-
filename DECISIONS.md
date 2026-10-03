@@ -17,15 +17,14 @@ CalcInk must recognize handwritten mathematical expressions containing:
 * equals (=)
 
 Required vocabulary: **16 classes**
+
 (10 digits, 4 operators, decimal point, equals).
 
 The recognition pipeline runs entirely on-device in the browser.
 
-The application supports offline operation after the required application assets
-and model files have been downloaded and cached.
+The application supports offline operation after the required application assets and model files have been downloaded and cached.
 
-The project uses an existing open-source pre-trained model rather than
-training a recognition model from scratch.
+The project uses an existing open-source pre-trained model rather than training a recognition model from scratch.
 
 ---
 
@@ -76,9 +75,7 @@ This allows the same stroke data to be used for:
 5. segmentation and preprocessing
 6. handwriting recognition
 
-The generated answer is stored separately as an annotation layer and is never
-added to the stroke history. Therefore it cannot be mistaken for handwriting
-during recognition.
+The generated answer is stored separately as an annotation layer and is never added to the stroke history. Therefore it cannot be mistaken for handwriting during recognition.
 
 ---
 
@@ -151,13 +148,9 @@ Model output:
 
 The required CalcInk vocabulary is represented by indices 0-15.
 
-The additional model classes are X, Y and Z. CalcInk does not treat them as
-valid mathematical expression symbols. If one reaches the evaluator, the
-expression is rejected as a syntax error and the user sees an error rather
-than a silently accepted result.
+The additional model classes are X, Y and Z. CalcInk does not treat them as valid mathematical expression symbols. If one reaches the evaluator, the expression is rejected as a syntax error and the user sees an error rather than a silently accepted result.
 
-The class order was taken from the original application source and checked
-empirically during CalcInk testing.
+The class order was taken from the original application source and checked empirically during CalcInk testing.
 
 ---
 
@@ -177,9 +170,7 @@ public/models/sagyam/V3/
 
 The model is loaded inside a dedicated Web Worker.
 
-The saved model configuration references `L1` and `L2` regularizers that
-TensorFlow.js 3.12.0 does not resolve by default. Compatibility
-registrations for both are performed in the worker before model loading.
+The saved model configuration references `L1` and `L2` regularizers that TensorFlow.js 3.12.0 does not resolve by default. Compatibility registrations for both are performed in the worker before model loading.
 
 ---
 
@@ -203,6 +194,7 @@ The directly measured local model payload is:
 
 ```text
 model.json              104,203 bytes
+
 group1-shard1of4.bin  4,194,304 bytes
 group1-shard2of4.bin  4,194,304 bytes
 group1-shard3of4.bin  4,194,304 bytes
@@ -215,19 +207,15 @@ Total measured model payload:
 14,481,495 bytes ≈ 13.81 MiB
 ```
 
-The 13.71 MiB value is therefore a parameter-storage calculation, while
-13.81 MiB is the measured size of the model files bundled with CalcInk.
+The 13.71 MiB value is therefore a parameter-storage calculation, while 13.81 MiB is the measured size of the model files bundled with CalcInk.
 
 ---
 
 ### Original model preprocessing
 
-The reference application reads the canvas as RGB, resizes it to 100 × 100
-using bilinear interpolation, divides pixel values by 255, and adds a batch
-dimension.
+The reference application reads the canvas as RGB, resizes it to 100 × 100 using bilinear interpolation, divides pixel values by 255, and adds a batch dimension.
 
-CalcInk deliberately uses a symbol-level preprocessing pipeline instead;
-see section 12.
+CalcInk deliberately uses a symbol-level preprocessing pipeline instead; see Section 12.
 
 ---
 
@@ -243,7 +231,7 @@ The main weakness in that screening was handwritten `6`:
 
 **2/5**
 
-The full per-attempt table is recorded in section 6.
+The full per-attempt table is recorded in Section 6.
 
 ---
 
@@ -251,8 +239,7 @@ The full per-attempt table is recorded in section 6.
 
 **Selected primary recognition model**
 
-Sagyam was selected after the symbol-level screening and successful local
-integration into CalcInk.
+Sagyam was selected after the symbol-level screening and successful local integration into CalcInk.
 
 ---
 
@@ -280,9 +267,7 @@ These size figures were not independently re-measured for CalcInk.
 
 **Status: documented alternative, not selected.**
 
-It was not selected for the current implementation because the CalcInk design
-explicitly exposes the stroke-to-tensor stage and uses per-symbol
-classification.
+It was not selected for the current implementation because the CalcInk design explicitly exposes the stroke-to-tensor stage and uses per-symbol classification.
 
 ---
 
@@ -308,8 +293,7 @@ The exact figure was not re-measured for CalcInk.
 
 **Status: not selected.**
 
-The reported footprint appeared unsuitable for the lightweight offline,
-client-side architecture targeted by CalcInk.
+The reported footprint appeared unsuitable for the lightweight offline, client-side architecture targeted by CalcInk.
 
 ---
 
@@ -324,8 +308,7 @@ Reported during the initial model search:
 
 **Status: fallback candidate, not used.**
 
-Using it would have required browser-oriented model conversion and separate
-decimal-point handling.
+Using it would have required browser-oriented model conversion and separate decimal-point handling.
 
 ---
 
@@ -335,8 +318,7 @@ Reported during the initial model search as a server-oriented solution.
 
 **Status: not selected.**
 
-A server-dependent recognition path conflicts with the 100% on-device
-requirement.
+A server-dependent recognition path conflicts with the 100% on-device requirement.
 
 ---
 
@@ -355,8 +337,7 @@ Candidates were compared using:
 9. Offline suitability
 10. Web Worker compatibility
 
-The selected model was chosen using the complete CalcInk architecture, not on
-model size alone.
+The selected model was chosen using the complete CalcInk architecture, not on model size alone.
 
 ---
 
@@ -394,9 +375,7 @@ Result
 Canvas answer projection
 ```
 
-A per-symbol classifier is used because it makes the stroke-to-tensor pipeline
-explicit and allows the exact CalcInk vocabulary to be controlled
-independently from the arithmetic parser.
+A per-symbol classifier is used because it makes the stroke-to-tensor pipeline explicit and allows the exact CalcInk vocabulary to be controlled independently from the arithmetic parser.
 
 Whole-expression recognition models remain documented alternatives.
 
@@ -420,8 +399,7 @@ Whole-expression recognition models remain documented alternatives.
 * neural-network inference
 * returning predictions
 
-Heavy model inference therefore runs outside the main drawing interaction
-path.
+Heavy model inference therefore runs outside the main drawing interaction path.
 
 Recognition requests carry an id, and worker responses are matched by id.
 
@@ -429,8 +407,7 @@ Recognition requests carry an id, and worker responses are matched by id.
 
 ## 6. Handwriting Evaluation Protocol (symbol level, live demo)
 
-Each required symbol was handwritten at least five times in the Sagyam live
-demo before local integration.
+Each required symbol was handwritten at least five times in the Sagyam live demo before local integration.
 
 Symbols:
 
@@ -479,9 +456,7 @@ Overall:
 
 **72/80 correct (90%)**
 
-This was a small personal handwriting test on the demo's own pipeline. It
-measures the model plus the demo's preprocessing and is not a general
-accuracy estimate.
+This was a small personal handwriting test on the demo's own pipeline. It measures the model plus the demo's preprocessing and is not a general accuracy estimate.
 
 ---
 
@@ -503,8 +478,7 @@ Result:
 
 Therefore Sagyam passed the initial screening.
 
-This rule was an engineering heuristic for the initial model-selection stage,
-not a statistical standard.
+This rule was an engineering heuristic for the initial model-selection stage, not a statistical standard.
 
 ---
 
@@ -523,11 +497,11 @@ Reasons:
 * successful local integration
 * 72/80 symbol-level screening result
 * 29/30 exact-text accuracy on the fresh expression-level evaluation
+* successful deployed offline verification
 
-The fresh expression-level result is a small-sample engineering measurement
-and is not presented as a general handwriting-recognition benchmark.
+The fresh expression-level result is a small-sample engineering measurement and is not presented as a general handwriting-recognition benchmark.
 
-Known weaknesses are documented in section 17.
+Known weaknesses are documented in Section 17.
 
 ---
 
@@ -535,8 +509,7 @@ Known weaknesses are documented in section 17.
 
 Every pen contact is stored as a separate stroke.
 
-Before recognition, strokes are grouped into candidate symbols using geometric
-features.
+Before recognition, strokes are grouped into candidate symbols using geometric features.
 
 Each stroke is analyzed using:
 
@@ -559,7 +532,7 @@ These thresholds are heuristic and configurable.
 
 ### Multi-stroke symbols
 
-#### Equals (`=`)
+### Equals (`=`)
 
 Two roughly horizontal strokes can form `=` when:
 
@@ -568,23 +541,19 @@ Two roughly horizontal strokes can form `=` when:
 * one stroke is above the other
 * their vertical separation is sufficiently small
 
-Two horizontal strokes that are far apart horizontally are not automatically
-merged into `=`.
+Two horizontal strokes that are far apart horizontally are not automatically merged into `=`.
 
-#### Plus (`+`)
+### Plus (`+`)
 
-A roughly horizontal and a roughly vertical stroke are grouped as `+` only
-when they actually cross.
+A roughly horizontal and a roughly vertical stroke are grouped as `+` only when they actually cross.
 
-A small crossing tolerance prevents nearby independent strokes from being
-merged.
+A small crossing tolerance prevents nearby independent strokes from being merged.
 
-#### Multiply (`×`)
+### Multiply (`×`)
 
-Two roughly diagonal strokes can form `×` when they cross near their
-centers.
+Two roughly diagonal strokes can form `×` when they cross near their centers.
 
-#### Division (`÷`)
+### Division (`÷`)
 
 A division symbol can contain:
 
@@ -592,23 +561,19 @@ A division symbol can contain:
 * horizontal bar
 * lower dot
 
-The components must satisfy the expected geometric arrangement around the
-bar.
+The components must satisfy the expected geometric arrangement around the bar.
 
 ### Dot-like strokes
 
-Very small strokes are handled separately from generic merging so they are
-not unnecessarily attached to neighboring symbols.
+Very small strokes are handled separately from generic merging so they are not unnecessarily attached to neighboring symbols.
 
 ### Generic merging
 
-Generic merging requires actual horizontal overlap before the configured
-overlap-ratio and vertical-gap conditions are applied.
+Generic merging requires actual horizontal overlap before the configured overlap-ratio and vertical-gap conditions are applied.
 
 This helps prevent adjacent symbols from being merged incorrectly.
 
-Merging repeats until no pair qualifies, because a successful merge can create
-a larger group that enables another valid merge.
+Merging repeats until no pair qualifies, because a successful merge can create a larger group that enables another valid merge.
 
 ### Ordering
 
@@ -616,9 +581,13 @@ Groups are sorted left to right by center x.
 
 ```text
 strokes
+
    ↓
+
 [group for 1] [group for +] [group for 2] [group for =]
+
    ↓
+
 1 + 2 =
 ```
 
@@ -626,8 +595,7 @@ strokes
 
 ## 10. Recognition Post-processing
 
-Post-processing handles geometric cases where the raw model label is not
-sufficient.
+Post-processing handles geometric cases where the raw model label is not sufficient.
 
 Current rules include:
 
@@ -637,12 +605,9 @@ one horizontal stroke   → -
 valid division layout   → ÷
 ```
 
-Post-processing uses stroke geometry and never calls the arithmetic evaluator
-to guess a symbol.
+Post-processing uses stroke geometry and never calls the arithmetic evaluator to guess a symbol.
 
-During evaluation, the debug output showed the raw model label next to the
-final label (`[label] raw=[label]`), so any label change caused by
-post-processing is visible in the debug data.
+During evaluation, the debug output showed the raw model label next to the final label (`[label] raw=[label]`), so any label change caused by post-processing is visible in the debug data.
 
 ---
 
@@ -658,25 +623,19 @@ A sufficiently small group is labelled `.` without asking the model:
 DOT_RATIO = 0.2
 ```
 
-This provides a more stable representation for tiny handwritten dots after
-symbol cropping and resizing.
+This provides a more stable representation for tiny handwritten dots after symbol cropping and resizing.
 
-The model's own decimal class remains part of the Sagyam vocabulary, but the
-current CalcInk pipeline does not rely exclusively on the model to resolve
-tiny isolated dots.
+The model's own decimal class remains part of the Sagyam vocabulary, but the current CalcInk pipeline does not rely exclusively on the model to resolve tiny isolated dots.
 
 ---
 
 ## 12. Recognition Preprocessing
 
-The visible canvas uses a CSS background while its drawing buffer is
-transparent.
+The visible canvas uses a CSS background while its drawing buffer is transparent.
 
-Therefore, recognition does not directly interpret the transparent drawing
-buffer as the model background.
+Therefore, recognition does not directly interpret the transparent drawing buffer as the model background.
 
-Instead, each symbol group is rendered onto an offscreen canvas with an
-explicit solid background.
+Instead, each symbol group is rendered onto an offscreen canvas with an explicit solid background.
 
 ### Pipeline
 
@@ -708,29 +667,23 @@ pixel / 255
 Sagyam model
 ```
 
-The current preprocessing configuration uses a nominal output ink thickness
-of 7 px.
+The current preprocessing configuration uses a nominal output ink thickness of 7 px.
 
 ### Why this differs from the original application
 
 The original application resizes its complete 400 × 400 canvas to 100 × 100.
 
-CalcInk uses a full-window canvas containing comparatively small symbols, so
-resizing the whole canvas would shrink symbols and can make their strokes too
-thin.
+CalcInk uses a full-window canvas containing comparatively small symbols, so resizing the whole canvas would shrink symbols and can make their strokes too thin.
 
-Cropping each segmented symbol and applying a single uniform scale avoids
-that problem.
+Cropping each segmented symbol and applying a single uniform scale avoids that problem.
 
-The worker constructs the tensor directly from RGB bytes instead of relying
-on `tf.browser.fromPixels`, avoiding backend-specific behavior in the worker.
+The worker constructs the tensor directly from RGB bytes instead of relying on `tf.browser.fromPixels`, avoiding backend-specific behavior in the worker.
 
 ### Experiment: wider symbol margin
 
 The earlier crop already had a surrounding margin.
 
-A larger effective margin was added and tested as a single fixed configuration
-rather than as a sweep of values.
+A larger effective margin was added and tested as a single fixed configuration rather than as a sweep of values.
 
 Approximate symbol occupancy of the final 100 × 100 image changed from:
 
@@ -751,18 +704,13 @@ Measured results:
 | `100÷0=`     |    1/5 |   5/5 |
 | `2+3×4-6÷2=` |    2/5 |   4/5 |
 
-These were small samples from different drawing sessions, and the tested
-expressions were part of the tuning process.
+These were small samples from different drawing sessions, and the tested expressions were part of the tuning process.
 
-Therefore the measurements are engineering evidence for the chosen
-configuration, not an independent recognition benchmark.
+Therefore the measurements are engineering evidence for the chosen configuration, not an independent recognition benchmark.
 
 The larger margin was retained because it improved both tests.
 
-The experiment does not establish why the larger margin helped. A possible
-hypothesis is that the additional empty space makes the input distribution
-more similar to examples seen by the model during training, but that has not
-been independently verified.
+The experiment does not establish why the larger margin helped. A possible hypothesis is that the additional empty space makes the input distribution more similar to examples seen by the model during training, but that has not been independently verified.
 
 ---
 
@@ -852,29 +800,25 @@ Expression evaluation
 Answer projection
 ```
 
-The debounce allows multi-stroke symbols such as `=`, `+`, and `÷` to finish
-before recognition.
+The debounce allows multi-stroke symbols such as `=`, `+`, and `÷` to finish before recognition.
 
 Each scheduled recognition run receives a version number.
 
 A result is applied only when its version is still current.
 
-Therefore a slow result from an older expression cannot overwrite a newer
-result.
+Therefore a slow result from an older expression cannot overwrite a newer result.
 
 A new pointer-down cancels pending recognition and removes the old answer.
 
 Worker requests also carry request ids, and responses are matched by id.
 
-Undo, redo, clear, and eraser operations trigger the normal recognition update
-flow through the canvas change events.
+Undo, redo, clear, and eraser operations trigger the normal recognition update flow through the canvas change events.
 
 ---
 
 ## 15. Dynamic Answer Projection
 
-When the recognized expression ends with `=`, the expression is evaluated and
-the result is rendered beside the equals sign.
+When the recognized expression ends with `=`, the expression is evaluated and the result is rendered beside the equals sign.
 
 Example:
 
@@ -904,8 +848,7 @@ Undefined
 
 ## 16. Fresh Expression-Level Evaluation
 
-After recognition, segmentation, and preprocessing tuning, a fresh
-expression-level evaluation was run.
+After recognition, segmentation, and preprocessing tuning, a fresh expression-level evaluation was run.
 
 ### Protocol
 
@@ -940,6 +883,7 @@ This is reported as **approximately 97%** because the sample is small.
 
 ```text
 Expected:   9-4=
+
 Recognized: Y1.-4=
 ```
 
@@ -953,15 +897,19 @@ with groups:
 
 ```text
 [Y]
+
 [1]
+
 [.]
+
 [-]
+
 [4]
+
 [=]
 ```
 
-The intended `9` was therefore split into three groups before classification,
-and those fragments were subsequently labelled `Y`, `1`, and `.`.
+The intended `9` was therefore split into three groups before classification, and those fragments were subsequently labelled `Y`, `1`, and `.`.
 
 Stage:
 
@@ -969,8 +917,7 @@ Stage:
 
 This is not described as a single-glyph model-only error.
 
-No post-processing mismatch was observed in the logged
-`[label] raw=[label]` output for this failed run.
+No post-processing mismatch was observed in the logged `[label] raw=[label]` output for this failed run.
 
 ### Runs outside the official denominator
 
@@ -996,8 +943,7 @@ One accidental:
 
 run was also recorded.
 
-It was not part of the official test set and is excluded from the official
-denominator.
+It was not part of the official test set and is excluded from the official denominator.
 
 Both additional runs remain in:
 
@@ -1010,19 +956,15 @@ docs/eval-fresh-set.txt
 * one writer
 * one device
 * small sample size
-* earlier evaluation sets were used during recognition, preprocessing, and
-  segmentation tuning
+* earlier evaluation sets were used during recognition, preprocessing, and segmentation tuning
 
-Therefore the 29/30 result is a small-sample engineering measurement, not a
-general handwriting-recognition benchmark.
+Therefore the 29/30 result is a small-sample engineering measurement, not a general handwriting-recognition benchmark.
 
 ### Answer accuracy
 
-Displayed-answer correctness was not recorded as a separate metric in this
-evaluation.
+Displayed-answer correctness was not recorded as a separate metric in this evaluation.
 
-Therefore no independent answer-accuracy percentage is claimed from this
-run.
+Therefore no independent answer-accuracy percentage is claimed from this run.
 
 A future evaluation should record:
 
@@ -1045,41 +987,33 @@ A tiny accidental pen mark can become a decimal point.
 
 ### Very small symbols
 
-Below approximately 8 px, the components of `÷` can become difficult to
-separate reliably.
+Below approximately 8 px, the components of `÷` can become difficult to separate reliably.
 
 ### Segmentation thresholds
 
-Segmentation thresholds are heuristic and were tuned primarily using one
-writer.
+Segmentation thresholds are heuristic and were tuned primarily using one writer.
 
 ### Multi-piece digits
 
-A digit drawn in several disconnected pieces can be split into multiple symbol
-groups.
+A digit drawn in several disconnected pieces can be split into multiple symbol groups.
 
 The fresh `9-4=` evaluation failure demonstrated this behavior.
 
 ### Recognition confidence
 
-The model's softmax confidence can be close to 100% even for an incorrect
-classification, so confidence is not treated as a guaranteed correctness
-measure.
+The model's softmax confidence can be close to 100% even for an incorrect classification, so confidence is not treated as a guaranteed correctness measure.
 
 ### Additional model classes
 
-X, Y and Z exist in the Sagyam model output but are not valid CalcInk
-expression symbols.
+X, Y and Z exist in the Sagyam model output but are not valid CalcInk expression symbols.
 
 ### Expression layout
 
-The current recognizer supports a single left-to-right expression and does not
-support stacked equations.
+The current recognizer supports a single left-to-right expression and does not support stacked equations.
 
 ### Evaluation size
 
-The fresh expression evaluation used one writer, one device, and only 30
-official runs.
+The fresh expression evaluation used one writer, one device, and only 30 official runs.
 
 ### Stroke eraser
 
@@ -1087,14 +1021,11 @@ The stroke eraser removes complete strokes.
 
 ### Pixel eraser
 
-The pixel eraser removes portions of strokes and may split one original stroke
-into multiple independent replacement strokes.
+The pixel eraser removes portions of strokes and may split one original stroke into multiple independent replacement strokes.
 
-Undo restores the original stroke rather than physically joining the
-replacement pieces back together.
+Undo restores the original stroke rather than physically joining the replacement pieces back together.
 
-The pixel eraser currently uses a fixed circular eraser radius and does not
-yet expose an eraser-size control.
+The pixel eraser currently uses a fixed circular eraser radius and does not yet expose an eraser-size control.
 
 ---
 
@@ -1126,17 +1057,13 @@ Therefore one continuous erase drag corresponds to one undo operation.
 
 The pixel eraser clips stroke segments against a circular eraser region.
 
-A sparse polyline is handled by intersecting each segment with the eraser
-circle, allowing a fast stroke segment to be cut even if no recorded point lies
-inside the erased area.
+A sparse polyline is handled by intersecting each segment with the eraser circle, allowing a fast stroke segment to be cut even if no recorded point lies inside the erased area.
 
 Boundary points are interpolated, including their timestamps.
 
-Very small remaining pieces are discarded so they do not become accidental
-decimal-point candidates.
+Very small remaining pieces are discarded so they do not become accidental decimal-point candidates.
 
-Eraser positions are interpolated during fast drags so the eraser cannot easily
-skip over a thin stroke between two pointer events.
+Eraser positions are interpolated during fast drags so the eraser cannot easily skip over a thin stroke between two pointer events.
 
 ### History model
 
@@ -1146,13 +1073,13 @@ The current action model supports:
 
 ```text
 add
+
 edit / replace
 ```
 
 Whole-stroke erasing is implemented as a replacement with no pieces.
 
-Pixel erasing is implemented as a replacement of one or more original strokes
-with their remaining pieces.
+Pixel erasing is implemented as a replacement of one or more original strokes with their remaining pieces.
 
 This allows one erase drag to remain a single undo/redo operation.
 
@@ -1160,8 +1087,7 @@ This allows one erase drag to remain a single undo/redo operation.
 
 ## 19. Offline / PWA Architecture
 
-CalcInk uses `vite-plugin-pwa` with Workbox-generated service-worker
-precache.
+CalcInk uses `vite-plugin-pwa` with Workbox-generated service-worker precache.
 
 The PWA build configuration precaches:
 
@@ -1199,8 +1125,7 @@ mode       generateSW
 precache   12 entries
 ```
 
-The four model shards were confirmed in the generated service-worker
-precache list.
+The four model shards were confirmed in the generated service-worker precache list.
 
 ### Local offline verification
 
@@ -1226,8 +1151,7 @@ group1-shard3of4.bin
 group1-shard4of4.bin
 ```
 
-The preview server was then stopped completely and the application was
-reloaded.
+The preview server was then stopped completely and the application was reloaded.
 
 The offline test succeeded:
 
@@ -1238,11 +1162,34 @@ The offline test succeeded:
 
 This proves local offline operation after the initial online load.
 
-The first visit still requires network access to download and cache the
-application and model assets.
+The first visit still requires network access to download and cache the application and model assets.
 
-A separate production/deployed airplane-mode verification remains to be
-completed.
+### Deployed offline verification
+
+Production deployment:
+
+```text
+https://calcink-on-device-handwritten-math.vercel.app/
+```
+
+The deployed application was opened and allowed to finish loading.
+
+The following was then verified:
+
+* `Model ready` appeared
+* handwritten recognition worked while online
+* network connectivity was disabled
+* the same deployed URL was reloaded
+* the application loaded successfully
+* the bundled model remained available
+* handwritten recognition continued to work
+* answer projection continued to work
+
+Result:
+
+**PASS — the deployed CalcInk application operates without network connectivity after the required application assets and model files have been cached.**
+
+This directly verifies the deployed application's offline behavior, in addition to the earlier local stopped-server test.
 
 ---
 
@@ -1313,6 +1260,9 @@ The following application behaviors have been manually verified:
 12. fast pixel-eraser dragging without visible skipped sections
 13. recognition updating after erasing
 14. local offline loading after the preview server was stopped
+15. deployed application loading offline after network was disabled
+16. deployed handwritten recognition while offline
+17. deployed answer projection while offline
 
 ---
 
@@ -1320,6 +1270,7 @@ The following application behaviors have been manually verified:
 
 ```text
 src/
+
 ├── canvas/
 │   ├── drawingCanvas.ts
 │   ├── history.ts
@@ -1327,6 +1278,7 @@ src/
 │   ├── hitTest.ts
 │   ├── pixelErase.ts
 │   └── types.ts
+│
 ├── recognition/
 │   ├── geometry.ts
 │   ├── segment.ts
@@ -1337,10 +1289,13 @@ src/
 │   ├── vocabulary.ts
 │   ├── answerLayout.ts
 │   └── scheduler.ts
+│
 ├── worker/
 │   └── recognition.worker.ts
+│
 ├── math/
 │   └── evaluate.ts
+│
 └── main.ts
 ```
 
@@ -1348,6 +1303,7 @@ Additional project files include:
 
 ```text
 public/
+
 └── models/
     └── sagyam/
         ├── NOTICE.md
@@ -1359,6 +1315,7 @@ public/
             └── group1-shard4of4.bin
 
 docs/
+
 └── eval-fresh-set.txt
 
 DECISIONS.md
@@ -1393,8 +1350,7 @@ The Sagyam model is third-party GPL-3.0 material and is redistributed in:
 public/models/sagyam/V3/
 ```
 
-Its source, license, architecture, class mapping, and redistribution details
-are documented in:
+Its source, license, architecture, class mapping, and redistribution details are documented in:
 
 ```text
 public/models/sagyam/NOTICE.md
@@ -1442,22 +1398,25 @@ public/models/sagyam/NOTICE.md
 * PWA/service-worker generation
 * model precaching
 * local stopped-server offline verification
+* deployed Vercel version
+* deployed airplane-mode/offline verification
 * README
 * model notice
 * root GPL-3.0 license
 * fresh expression-level evaluation
 * 113 automated tests
+* successful production build
 
-### Still required before final submission
+### Remaining technical work before final submission
 
-* deployed production URL
-* airplane-mode verification on the deployed URL
 * recognition latency measurement
-* memory-usage measurement over a longer session
 * drawing performance / 60 FPS measurement
-* final production-build verification
-* final README update with the deployed live link
+* memory-usage measurement over a longer session
+* final production-build verification after all documentation changes
+* final README update with the deployed live link, if not already present
 * final repository review
+* final check for remaining debug output and unnecessary files
+* final submission-readiness audit against the Phase 1 rubric
 
 ---
 
@@ -1467,6 +1426,7 @@ Before submission, run:
 
 ```bash
 npm test -- --run
+
 npm run build
 ```
 
@@ -1474,16 +1434,48 @@ Then verify:
 
 ```text
 113 tests passing
+
 production build succeeds
+
 service worker generated
+
 all four model shards included in precache
+
 live deployment works
+
 deployed offline mode works after initial online load
+
 recognition latency is measured
+
 memory usage is measured
+
 drawing remains responsive near 60 FPS
+
 no debug console.log statements remain
+
 all model files are tracked
+
+README contains the live demo URL
+
 documentation is up to date
+
 Git working tree is clean
 ```
+
+### Current Git checkpoint
+
+The latest committed documentation update is:
+
+```text
+0d56e79 docs: update architecture decisions and verification status
+```
+
+The repository was pushed successfully to `origin/main` and the working tree was clean after that commit.
+
+### Live Demo
+
+```text
+https://calcink-on-device-handwritten-math.vercel.app/
+```
+
+The deployed application has been verified to continue functioning after network connectivity was disabled, provided that the application and model assets had already been cached.
