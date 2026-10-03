@@ -1,6 +1,6 @@
 # CalcInk Model & Architecture Decisions
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 
 ---
 
@@ -8,13 +8,13 @@ Last updated: 2026-10-03
 
 CalcInk must recognize handwritten mathematical expressions containing:
 
-* digits 0-9
-* plus (+)
-* minus (-)
-* multiplication (×)
-* division (÷)
-* decimal point (.)
-* equals (=)
+- digits 0-9
+- plus (+)
+- minus (-)
+- multiplication (×)
+- division (÷)
+- decimal point (.)
+- equals (=)
 
 Required vocabulary: **16 classes**
 
@@ -38,9 +38,9 @@ The source of truth is the stroke state.
 
 Each point contains:
 
-* x coordinate
-* y coordinate
-* timestamp
+- x coordinate
+- y coordinate
+- timestamp
 
 ```ts
 type Point = {
@@ -54,9 +54,9 @@ type Point = {
 
 Each stroke contains:
 
-* stroke id
-* stroke width
-* ordered list of points
+- stroke id
+- stroke width
+- ordered list of points
 
 ```ts
 type Stroke = {
@@ -105,12 +105,12 @@ Input:
 
 Model architecture:
 
-* MobileNetV2 backbone without the classification head
-* Global max pooling
-* BatchNormalization
-* Dense(1024, ReLU)
-* Dropout(0.3)
-* Dense(19, Softmax)
+- MobileNetV2 backbone without the classification head
+- Global max pooling
+- BatchNormalization
+- Dense(1024, ReLU)
+- Dropout(0.3)
+- Dense(19, Softmax)
 
 Parameter count:
 
@@ -124,27 +124,27 @@ Model output:
 
 ### Class-index mapping
 
-| Index | Label        |
-| ----: | ------------ |
-|     0 | 0            |
-|     1 | 1            |
-|     2 | 2            |
-|     3 | 3            |
-|     4 | 4            |
-|     5 | 5            |
-|     6 | 6            |
-|     7 | 7            |
-|     8 | 8            |
-|     9 | 9            |
-|    10 | Add (+)      |
-|    11 | Decimal (.)  |
-|    12 | Division (÷) |
-|    13 | Equals (=)   |
-|    14 | Multiply (×) |
-|    15 | Minus (-)    |
-|    16 | X            |
-|    17 | Y            |
-|    18 | Z            |
+| Index | Label |
+| ----: | ----- |
+| 0 | 0 |
+| 1 | 1 |
+| 2 | 2 |
+| 3 | 3 |
+| 4 | 4 |
+| 5 | 5 |
+| 6 | 6 |
+| 7 | 7 |
+| 8 | 8 |
+| 9 | 9 |
+| 10 | Add (+) |
+| 11 | Decimal (.) |
+| 12 | Division (÷) |
+| 13 | Equals (=) |
+| 14 | Multiply (×) |
+| 15 | Minus (-) |
+| 16 | X |
+| 17 | Y |
+| 18 | Z |
 
 The required CalcInk vocabulary is represented by indices 0-15.
 
@@ -259,9 +259,9 @@ CoMER, a whole-expression recognizer
 
 Reported model footprint:
 
-* encoder_int8.onnx: 3.4 MB
-* decoder_int8.onnx: 4.0 MB
-* total: 7.2 MB
+- encoder_int8.onnx: 3.4 MB
+- decoder_int8.onnx: 4.0 MB
+- total: 7.2 MB
 
 These size figures were not independently re-measured for CalcInk.
 
@@ -301,10 +301,10 @@ The reported footprint appeared unsuitable for the lightweight offline, client-s
 
 Reported during the initial model search:
 
-* MIT license
-* Keras models
-* 15 classes
-* no decimal-point class
+- MIT license
+- Keras models
+- 15 classes
+- no decimal-point class
 
 **Status: fallback candidate, not used.**
 
@@ -345,33 +345,61 @@ The selected model was chosen using the complete CalcInk architecture, not on mo
 
 ```text
 Pointer input
+
       ↓
+
 Stroke capture
+
       ↓
+
 Stroke history
+
       ↓
+
 Recognition scheduling
+
       ↓
+
 Symbol segmentation
+
       ↓
+
 Per-symbol preprocessing
+
       ↓
+
 100 × 100 RGB input
+
       ↓
+
 Recognition Web Worker
+
       ↓
+
 TensorFlow.js Sagyam model
+
       ↓
+
 Per-symbol classification
+
       ↓
+
 Geometric post-processing
+
       ↓
+
 Recognized expression text
+
       ↓
+
 Deterministic arithmetic parser
+
       ↓
+
 Result
+
       ↓
+
 Canvas answer projection
 ```
 
@@ -381,23 +409,23 @@ Whole-expression recognition models remain documented alternatives.
 
 ### Main-thread responsibilities
 
-* pointer input and stroke storage
-* canvas rendering
-* undo/redo
-* clear
-* stroke width
-* stroke and pixel eraser interaction
-* symbol segmentation
-* per-symbol image preparation
-* recognition scheduling
-* answer display
+- pointer input and stroke storage
+- canvas rendering
+- undo/redo
+- clear
+- stroke width
+- stroke and pixel eraser interaction
+- symbol segmentation
+- per-symbol image preparation
+- recognition scheduling
+- answer display
 
 ### Worker responsibilities
 
-* TensorFlow.js model loading
-* converting image data to a tensor
-* neural-network inference
-* returning predictions
+- TensorFlow.js model loading
+- converting image data to a tensor
+- neural-network inference
+- returning predictions
 
 Heavy model inference therefore runs outside the main drawing interaction path.
 
@@ -413,44 +441,43 @@ Symbols:
 
 ```text
 0 1 2 3 4 5 6 7 8 9
-
 + - × ÷ . =
 ```
 
 Multi-stroke symbols were drawn with natural gaps between strokes:
 
-* `+`
-* `=`
-* `÷`
-* `×`
+- `+`
+- `=`
+- `÷`
+- `×`
 
 The test also specifically checked:
 
-* × versus X
-* handwritten division versus the model's division form
-* decimal point versus an accidental dot
-* `=` as two separate strokes
+- × versus X
+- handwritten division versus the model's division form
+- decimal point versus an accidental dot
+- `=` as two separate strokes
 
 ### Test results
 
 | Symbol | Attempt 1 | Attempt 2 | Attempt 3 | Attempt 4 | Attempt 5 | Correct |
 | ------ | --------- | --------- | --------- | --------- | --------- | ------- |
-| 0      | 0         | 0         | 0         | 0         | 0         | 5/5     |
-| 1      | 1         | 1         | 3         | 1         | 1         | 4/5     |
-| 2      | 2         | 2         | X         | 2         | 2         | 4/5     |
-| 3      | 3         | 3         | 3         | 3         | 3         | 5/5     |
-| 4      | 4         | 4         | 4         | 4         | 4         | 5/5     |
-| 5      | 5         | 5         | 3         | 5         | 5         | 4/5     |
-| 6      | 6         | 3         | 8         | 6         | 8         | 2/5     |
-| 7      | 7         | 7         | 7         | 7         | 7         | 5/5     |
-| 8      | 8         | 8         | 8         | 8         | 8         | 5/5     |
-| 9      | 9         | 9         | 9         | 9         | 9         | 5/5     |
-| +      | Add       | Add       | Multiply  | Add       | Add       | 4/5     |
-| -      | Minus     | Minus     | Minus     | Minus     | Minus     | 5/5     |
-| ×      | Multiply  | Multiply  | Multiply  | Multiply  | Multiply  | 5/5     |
-| ÷      | Division  | Division  | Division  | Division  | Division  | 5/5     |
-| .      | Decimal   | Decimal   | Decimal   | Decimal   | Decimal   | 5/5     |
-| =      | Equals    | Equals    | Minus     | Equals    | Equals    | 4/5     |
+| 0 | 0 | 0 | 0 | 0 | 0 | 5/5 |
+| 1 | 1 | 1 | 3 | 1 | 1 | 4/5 |
+| 2 | 2 | 2 | X | 2 | 2 | 4/5 |
+| 3 | 3 | 3 | 3 | 3 | 3 | 5/5 |
+| 4 | 4 | 4 | 4 | 4 | 4 | 5/5 |
+| 5 | 5 | 5 | 3 | 5 | 5 | 4/5 |
+| 6 | 6 | 3 | 8 | 6 | 8 | 2/5 |
+| 7 | 7 | 7 | 7 | 7 | 7 | 5/5 |
+| 8 | 8 | 8 | 8 | 8 | 8 | 5/5 |
+| 9 | 9 | 9 | 9 | 9 | 9 | 5/5 |
+| + | Add | Add | Multiply | Add | Add | 4/5 |
+| - | Minus | Minus | Minus | Minus | Minus | 5/5 |
+| × | Multiply | Multiply | Multiply | Multiply | Multiply | 5/5 |
+| ÷ | Division | Division | Division | Division | Division | 5/5 |
+| . | Decimal | Decimal | Decimal | Decimal | Decimal | 5/5 |
+| = | Equals | Equals | Minus | Equals | Equals | 4/5 |
 
 Overall:
 
@@ -464,17 +491,17 @@ This was a small personal handwriting test on the demo's own pipeline. It measur
 
 The initial Sagyam screening heuristic was:
 
-* at least 14 of the 16 symbols should achieve 4/5 or better
-* both `.` and `=` should work
-* persistent `.` or `=` failures would trigger evaluation of the fallback
-* persistent × versus X confusion could justify post-processing
+- at least 14 of the 16 symbols should achieve 4/5 or better
+- both `.` and `=` should work
+- persistent `.` or `=` failures would trigger evaluation of the fallback
+- persistent × versus X confusion could justify post-processing
 
 Result:
 
-* 15 of 16 symbols reached at least 4/5
-* `.` was 5/5
-* `=` was 4/5
-* overall result was 72/80
+- 15 of 16 symbols reached at least 4/5
+- `.` was 5/5
+- `=` was 4/5
+- overall result was 72/80
 
 Therefore Sagyam passed the initial screening.
 
@@ -488,16 +515,16 @@ This rule was an engineering heuristic for the initial model-selection stage, no
 
 Reasons:
 
-* browser-side TensorFlow.js inference
-* local model assets
-* Web Worker inference
-* 100 × 100 × 3 input
-* 19-class output containing the 16 required CalcInk symbols
-* straightforward per-symbol classification
-* successful local integration
-* 72/80 symbol-level screening result
-* 29/30 exact-text accuracy on the fresh expression-level evaluation
-* successful deployed offline verification
+- browser-side TensorFlow.js inference
+- local model assets
+- Web Worker inference
+- 100 × 100 × 3 input
+- 19-class output containing the 16 required CalcInk symbols
+- straightforward per-symbol classification
+- successful local integration
+- 72/80 symbol-level screening result
+- 29/30 exact-text accuracy on the fresh expression-level evaluation
+- successful deployed offline verification
 
 The fresh expression-level result is a small-sample engineering measurement and is not presented as a general handwriting-recognition benchmark.
 
@@ -513,12 +540,12 @@ Before recognition, strokes are grouped into candidate symbols using geometric f
 
 Each stroke is analyzed using:
 
-* bounding box
-* width and height
-* center position
-* horizontal overlap
-* vertical gap relative to neighboring groups
-* relative size
+- bounding box
+- width and height
+- center position
+- horizontal overlap
+- vertical gap relative to neighboring groups
+- relative size
 
 Current defaults:
 
@@ -536,10 +563,10 @@ These thresholds are heuristic and configurable.
 
 Two roughly horizontal strokes can form `=` when:
 
-* both are approximately horizontal
-* their horizontal ranges overlap substantially
-* one stroke is above the other
-* their vertical separation is sufficiently small
+- both are approximately horizontal
+- their horizontal ranges overlap substantially
+- one stroke is above the other
+- their vertical separation is sufficiently small
 
 Two horizontal strokes that are far apart horizontally are not automatically merged into `=`.
 
@@ -557,9 +584,9 @@ Two roughly diagonal strokes can form `×` when they cross near their centers.
 
 A division symbol can contain:
 
-* upper dot
-* horizontal bar
-* lower dot
+- upper dot
+- horizontal bar
+- lower dot
 
 The components must satisfy the expected geometric arrangement around the bar.
 
@@ -602,6 +629,7 @@ Current rules include:
 ```text
 two horizontal strokes  → =
 one horizontal stroke   → -
+
 valid division layout   → ÷
 ```
 
@@ -641,29 +669,53 @@ Instead, each symbol group is rendered onto an offscreen canvas with an explicit
 
 ```text
 Symbol group strokes
+
         ↓
+
 Bounding box
+
         ↓
+
 Square crop
+
         ↓
+
 Expanded margin
+
         ↓
+
 Render with uniform scale
+
         ↓
+
 White background + black ink
+
         ↓
+
 Constant output ink thickness
+
         ↓
+
 100 × 100 RGB ImageData
+
         ↓
+
 Transfer to worker
+
         ↓
+
 Float32 tensor
+
         ↓
+
 pixel / 255
+
         ↓
+
 [1, 100, 100, 3]
+
         ↓
+
 Sagyam model
 ```
 
@@ -699,10 +751,10 @@ to:
 
 Measured results:
 
-| Expression   | Before | After |
-| ------------ | -----: | ----: |
-| `100÷0=`     |    1/5 |   5/5 |
-| `2+3×4-6÷2=` |    2/5 |   4/5 |
+| Expression | Before | After |
+| ---------- | -----: | ----: |
+| `100÷0=` | 1/5 | 5/5 |
+| `2+3×4-6÷2=` | 2/5 | 4/5 |
 
 These were small samples from different drawing sessions, and the tested expressions were part of the tuning process.
 
@@ -734,25 +786,26 @@ number := digits with at most one '.', at least one digit
 
 Precedence follows directly from the grammar:
 
-* × and ÷ bind tighter than + and -
-* operators are left-associative
-* unary minus binds to a following number or unary expression
+- × and ÷ bind tighter than + and -
+- operators are left-associative
+- unary minus binds to a following number or unary expression
 
 Supported:
 
-* multi-digit integers
-* decimal numbers
-* negative numbers
-* `+`
-* `-`
-* `×`
-* `÷`
-* terminal `=`
+- multi-digit integers
+- decimal numbers
+- negative numbers
+- `+`
+- `-`
+- `×`
+- `÷`
+- terminal `=`
 
 The evaluator supports expressions such as:
 
 ```text
 5--3
+
 5×-3
 ```
 
@@ -774,7 +827,9 @@ Examples include:
 
 ```text
 2++3
+
 2×÷3
+
 1.2.3
 ```
 
@@ -790,13 +845,21 @@ Recognition runs automatically after writing.
 
 ```text
 Stroke committed
+
       ↓
+
 600 ms debounce
+
       ↓
+
 Recognition
+
       ↓
+
 Expression evaluation
+
       ↓
+
 Answer projection
 ```
 
@@ -830,11 +893,11 @@ The answer is an annotation layer rather than a user stroke.
 
 It:
 
-* is placed immediately to the right of `=`
-* is vertically centered on `=`
-* is sized from the median recognized digit height within fixed bounds
-* uses a separate visual style
-* disappears when the user starts a new stroke or edits the canvas
+- is placed immediately to the right of `=`
+- is vertically centered on `=`
+- is sized from the median recognized digit height within fixed bounds
+- uses a separate visual style
+- disappears when the user starts a new stroke or edits the canvas
 
 The toolbar also displays the recognized expression and result.
 
@@ -852,26 +915,26 @@ After recognition, segmentation, and preprocessing tuning, a fresh expression-le
 
 ### Protocol
 
-* 10 expressions
-* 3 official attempts per expression
-* 30 official runs
-* one writer
-* one device
+- 10 expressions
+- 3 official attempts per expression
+- 30 official runs
+- one writer
+- one device
 
 ### Official set and result
 
-| Expression  | Correct |
+| Expression | Correct |
 | ----------- | ------: |
-| `9-4=`      |     2/3 |
-| `6×7=`      |     3/3 |
-| `8÷4=`      |     3/3 |
-| `3.2+1.8=`  |     3/3 |
-| `25×4=`     |     3/3 |
-| `100-37=`   |     3/3 |
-| `7+8÷2=`    |     3/3 |
-| `6×3-4=`    |     3/3 |
-| `0.5×6=`    |     3/3 |
-| `36÷9+2.5=` |     3/3 |
+| `9-4=` | 2/3 |
+| `6×7=` | 3/3 |
+| `8÷4=` | 3/3 |
+| `3.2+1.8=` | 3/3 |
+| `25×4=` | 3/3 |
+| `100-37=` | 3/3 |
+| `7+8÷2=` | 3/3 |
+| `6×3-4=` | 3/3 |
+| `0.5×6=` | 3/3 |
+| `36÷9+2.5=` | 3/3 |
 
 Exact recognized-text accuracy:
 
@@ -953,10 +1016,10 @@ docs/eval-fresh-set.txt
 
 ### Caveats
 
-* one writer
-* one device
-* small sample size
-* earlier evaluation sets were used during recognition, preprocessing, and segmentation tuning
+- one writer
+- one device
+- small sample size
+- earlier evaluation sets were used during recognition, preprocessing, and segmentation tuning
 
 Therefore the 29/30 result is a small-sample engineering measurement, not a general handwriting-recognition benchmark.
 
@@ -970,8 +1033,11 @@ A future evaluation should record:
 
 ```text
 expected expression
+
 recognized expression
+
 displayed answer
+
 expected answer
 ```
 
@@ -1041,11 +1107,17 @@ For each pointer position:
 
 ```text
 pointer position
+
       ↓
+
 point-to-segment distance
+
       ↓
+
 stroke hit test
+
       ↓
+
 stroke id collected
 ```
 
@@ -1112,16 +1184,21 @@ The production build generated:
 
 ```text
 dist/sw.js
+
 dist/workbox-*.js
+
 dist/manifest.webmanifest
+
 dist/registerSW.js
 ```
 
-The build reported:
+The build reports:
 
 ```text
 PWA v1.3.0
+
 mode       generateSW
+
 precache   12 entries
 ```
 
@@ -1145,6 +1222,7 @@ Cache Storage contained:
 
 ```text
 model.json
+
 group1-shard1of4.bin
 group1-shard2of4.bin
 group1-shard3of4.bin
@@ -1155,10 +1233,10 @@ The preview server was then stopped completely and the application was reloaded.
 
 The offline test succeeded:
 
-* page loaded
-* `Model ready` appeared
-* `2+3=` was recognized
-* result `5` was displayed
+- page loaded
+- `Model ready` appeared
+- `2+3=` was recognized
+- result `5` was displayed
 
 This proves local offline operation after the initial online load.
 
@@ -1176,14 +1254,14 @@ The deployed application was opened and allowed to finish loading.
 
 The following was then verified:
 
-* `Model ready` appeared
-* handwritten recognition worked while online
-* network connectivity was disabled
-* the same deployed URL was reloaded
-* the application loaded successfully
-* the bundled model remained available
-* handwritten recognition continued to work
-* answer projection continued to work
+- `Model ready` appeared
+- handwritten recognition worked while online
+- network connectivity was disabled
+- the same deployed URL was reloaded
+- the application loaded successfully
+- the bundled model remained available
+- handwritten recognition continued to work
+- answer projection continued to work
 
 Result:
 
@@ -1197,19 +1275,19 @@ This directly verifies the deployed application's offline behavior, in addition 
 
 The automated suite currently covers:
 
-* basic project setup
-* coordinate conversion
-* stroke history
-* geometry
-* post-processing
-* arithmetic evaluation
-* symbol segmentation
-* recognition pipeline
-* answer layout
-* recognition scheduling
-* stroke hit testing
-* pixel erasing
-* undo/redo replacement history
+- basic project setup
+- coordinate conversion
+- stroke history
+- geometry
+- post-processing
+- arithmetic evaluation
+- symbol segmentation
+- recognition pipeline
+- answer layout
+- recognition scheduling
+- stroke hit testing
+- pixel erasing
+- undo/redo replacement history
 
 Current status:
 
@@ -1227,17 +1305,29 @@ completed successfully.
 
 ```text
 basic              1
+
 coordinates        2
+
 evaluate          36
+
 geometry           3
+
 history           15
+
 hitTest            6
+
 pipeline           7
+
 pixelErase        12
+
 postprocess        3
+
 scheduler          6
+
 segment           16
+
 answerLayout       6
+
 --------------------
 total            113
 ```
@@ -1263,6 +1353,94 @@ The following application behaviors have been manually verified:
 15. deployed application loading offline after network was disabled
 16. deployed handwritten recognition while offline
 17. deployed answer projection while offline
+
+### Performance validation
+
+#### Recognition latency
+
+A browser-console instrumentation pass measured model-inference and end-to-end recognition timings.
+
+Measured model inference:
+
+```text
+samples  = 106
+min      = 9.2 ms
+max      = 437.0 ms
+mean     = 27.74 ms
+median   = 24.15 ms
+```
+
+Measured end-to-end recognition:
+
+```text
+runs     = 41
+min      = 0 ms
+max      = 443.8 ms
+mean     = 84.21 ms
+median   = 62.9 ms
+```
+
+These measurements include initialization and other timing variation. The median is therefore a more representative summary of typical observed steady-state behavior than the maximum. A separate later session also observed a cold-start inference of approximately 732 ms; that value is treated as an initialization observation rather than the steady-state summary.
+
+The instrumentation was temporary and was removed before the final production build.
+
+#### Drawing performance
+
+Chrome Frame Rendering Stats were used during a manual drawing test.
+
+Observed:
+
+```text
+typical / sustained ≈ 58 FPS
+maximum              = 60.2 FPS
+minimum observed     = 30 FPS
+```
+
+The result supports the description **typically near 60 FPS with transient dips**, rather than a guarantee of 60 FPS under all workloads and devices.
+
+The measurement was repeated with console logging suppressed so that diagnostic logging did not become the primary source of main-thread overhead.
+
+#### Memory stability
+
+A Chrome Performance recording covered approximately:
+
+```text
+5.3 minutes
+```
+
+The observed metrics were:
+
+```text
+JS heap        = 3.6–4.7 MB
+
+Documents      = 1–1
+
+Listeners      = 21–21
+```
+
+The JS heap repeatedly increased and decreased during the session instead of showing a continuous upward trend.
+
+The stable document and listener counts also provide evidence against obvious persistent accumulation during the tested session.
+
+This is an observational stability test, not a formal proof of absence of memory leaks.
+
+#### Browser responsiveness
+
+A Chrome local metrics measurement reported:
+
+```text
+LCP = 0.12 s
+INP = 32 ms
+```
+
+A separate Performance recording reported:
+
+```text
+INP = 48 ms
+CLS = 0.01
+```
+
+These browser metrics were collected locally on one device and are not presented as population-level field metrics.
 
 ---
 
@@ -1306,8 +1484,10 @@ public/
 
 └── models/
     └── sagyam/
+
         ├── NOTICE.md
         └── V3/
+
             ├── model.json
             ├── group1-shard1of4.bin
             ├── group1-shard2of4.bin
@@ -1336,11 +1516,11 @@ The generated answer remains separate from the handwriting stroke state.
 
 Completed:
 
-* root `LICENSE`
-* `README.md`
-* `public/models/sagyam/NOTICE.md`
-* `docs/eval-fresh-set.txt`
-* `DECISIONS.md`
+- root `LICENSE`
+- `README.md`
+- `public/models/sagyam/NOTICE.md`
+- `docs/eval-fresh-set.txt`
+- `DECISIONS.md`
 
 The CalcInk repository is published under GPL-3.0.
 
@@ -1356,73 +1536,80 @@ Its source, license, architecture, class mapping, and redistribution details are
 public/models/sagyam/NOTICE.md
 ```
 
+The README contains the live deployed demo URL and the current project status.
+
 ---
 
-## 23. Implementation Status and Remaining Work
+## 23. Implementation Status
 
 ### Completed
 
-* responsive digital-ink canvas
-* mouse, stylus, and touch input
-* pointer events
-* coalesced pointer-event handling
-* smooth stroke rendering
-* high-DPI scaling
-* stroke-width control
-* stroke-based state
-* undo
-* redo
-* clear
-* stroke segmentation
-* geometric post-processing
-* symbol preprocessing
-* geometric decimal-point handling
-* local Sagyam model integration
-* TensorFlow.js inference
-* Web Worker inference
-* request-id matching
-* deterministic arithmetic parser
-* standard operator precedence
-* multi-digit numbers
-* decimal numbers
-* negative numbers
-* division-by-zero handling
-* automatic recognition
-* 600 ms debounce
-* stale-result protection
-* inline answer projection
-* dynamic answer removal
-* stroke eraser
-* pixel eraser
-* undo/redo for eraser operations
-* PWA/service-worker generation
-* model precaching
-* local stopped-server offline verification
-* deployed Vercel version
-* deployed airplane-mode/offline verification
-* README
-* model notice
-* root GPL-3.0 license
-* fresh expression-level evaluation
-* 113 automated tests
-* successful production build
+- responsive digital-ink canvas
+- mouse, stylus, and touch input
+- pointer events
+- coalesced pointer-event handling
+- smooth stroke rendering
+- high-DPI scaling
+- stroke-width control
+- stroke-based state
+- undo
+- redo
+- clear
+- stroke segmentation
+- geometric post-processing
+- symbol preprocessing
+- geometric decimal-point handling
+- local Sagyam model integration
+- TensorFlow.js inference
+- Web Worker inference
+- request-id matching
+- deterministic arithmetic parser
+- standard operator precedence
+- multi-digit numbers
+- decimal numbers
+- negative numbers
+- division-by-zero handling
+- automatic recognition
+- 600 ms debounce
+- stale-result protection
+- inline answer projection
+- dynamic answer removal
+- stroke eraser
+- pixel eraser
+- undo/redo for eraser operations
+- PWA/service-worker generation
+- model precaching
+- local stopped-server offline verification
+- deployed Vercel version
+- deployed offline verification
+- README
+- model notice
+- root GPL-3.0 license
+- fresh expression-level evaluation
+- recognition latency measurement
+- drawing performance measurement
+- memory stability measurement
+- 113 automated tests
+- successful production build
 
-### Remaining technical work before final submission
+### Final pre-submission work
 
-* recognition latency measurement
-* drawing performance / 60 FPS measurement
-* memory-usage measurement over a longer session
-* final production-build verification after all documentation changes
-* final README update with the deployed live link, if not already present
-* final repository review
-* final check for remaining debug output and unnecessary files
-* final submission-readiness audit against the Phase 1 rubric
+The main implementation and performance validation work is complete.
+
+Remaining administrative checks are:
+
+- review the final Git working tree
+- confirm no temporary debug instrumentation remains
+- confirm all model files are tracked
+- confirm documentation reflects the final committed state
+- make the final documentation commit and push
+- perform one final submission-readiness audit against the Phase 1 rubric
 
 ---
 
 ## 24. Final Validation Checklist
 
-Before submission, run:
+Run:
 
 ```bash
 npm test -- --run
@@ -1433,44 +1620,48 @@ npm run build
 Then verify:
 
 ```text
-113 tests passing
+✓ 113 tests passing
 
-production build succeeds
+✓ production build succeeds
 
-service worker generated
+✓ service worker generated
 
-all four model shards included in precache
+✓ all four model shards included in precache
 
-live deployment works
+✓ live deployment works
 
-deployed offline mode works after initial online load
+✓ deployed offline mode works after initial online load
 
-recognition latency is measured
+✓ recognition latency measured
 
-memory usage is measured
+✓ drawing performance measured
 
-drawing remains responsive near 60 FPS
+✓ memory usage measured
 
-no debug console.log statements remain
+✓ drawing is typically near 60 FPS
 
-all model files are tracked
+✓ temporary debug instrumentation removed
 
-README contains the live demo URL
+✓ all model files are tracked
 
-documentation is up to date
+✓ README contains the live demo URL
 
-Git working tree is clean
+✓ documentation is up to date
+
+→ final Git working tree check
 ```
 
 ### Current Git checkpoint
 
-The latest committed documentation update is:
+The latest committed project update is:
 
 ```text
-0d56e79 docs: update architecture decisions and verification status
+3119881 docs: update README with current project status
 ```
 
-The repository was pushed successfully to `origin/main` and the working tree was clean after that commit.
+The performance instrumentation used for measurement was temporary and was restored out of `src/main.ts` before the final test/build verification.
+
+The final documentation update represented by this file should be committed after review.
 
 ### Live Demo
 
