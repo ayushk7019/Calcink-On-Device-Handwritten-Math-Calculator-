@@ -3,6 +3,7 @@ import { strokeHit } from "./hitTest";
 import { erasePieces } from "./pixelErase";
 import { StrokeHistory } from "./history";
 import type { Annotation } from "../recognition/answerLayout";
+import type { SymbolOverlay } from "../recognition/overlayLayout";
 import type { Point, Stroke } from "./types";
 
 export type CanvasChangeKind =
@@ -16,6 +17,8 @@ export class DrawingCanvas {
   private history = new StrokeHistory();
   private currentStroke: Stroke | null = null;
   private annotations: Annotation[] = [];
+  private overlays: SymbolOverlay[] = [];
+  private showOverlays = false;
   private nextId = 1;
   private strokeWidth = 3;
   private cssWidth = 0;
@@ -372,6 +375,7 @@ export class DrawingCanvas {
     event.preventDefault();
 
     this.annotations = [];
+    this.overlays = [];
 
     this.onChange?.("start");
 
@@ -490,6 +494,7 @@ export class DrawingCanvas {
     this.lastEraser = null;
 
     this.annotations = [];
+    this.overlays = [];
     this.currentStroke = null;
 
     this.render();
@@ -564,6 +569,65 @@ export class DrawingCanvas {
     );
 
     this.ctx.stroke();
+  }
+
+  private drawOverlays() {
+    if (
+      !this.showOverlays ||
+      this.overlays.length === 0
+    ) {
+      return;
+    }
+
+    const colors = {
+      high: "#2e7d32",
+      medium: "#b26a00",
+      low: "#b3261e",
+    };
+
+    this.ctx.save();
+
+    this.ctx.lineWidth = 1;
+    this.ctx.setLineDash([4, 3]);
+    this.ctx.font =
+      '11px system-ui, "Segoe UI", sans-serif';
+    this.ctx.textBaseline =
+      "bottom";
+
+    for (
+      const overlay of
+      this.overlays
+    ) {
+      this.ctx.strokeStyle =
+        colors[overlay.level];
+
+      this.ctx.fillStyle =
+        colors[overlay.level];
+
+      this.ctx.strokeRect(
+        overlay.x,
+        overlay.y,
+        overlay.w,
+        overlay.h
+      );
+
+      const labelY =
+        overlay.y < 14
+          ? overlay.y +
+            overlay.h +
+            13
+          : overlay.y - 2;
+
+      this.ctx.fillText(
+        overlay.text,
+        overlay.x,
+        labelY
+      );
+    }
+
+    this.ctx.restore();
+
+    this.applyStyle();
   }
 
   private drawAnnotations() {
@@ -654,6 +718,7 @@ export class DrawingCanvas {
       );
     }
 
+    this.drawOverlays();
     this.drawAnnotations();
   }
 
@@ -663,6 +728,22 @@ export class DrawingCanvas {
     this.annotations =
       [...annotations];
 
+    this.render();
+  }
+
+  setOverlays(
+    overlays: SymbolOverlay[]
+  ) {
+    this.overlays =
+      [...overlays];
+
+    this.render();
+  }
+
+  setShowOverlays(
+    on: boolean
+  ) {
+    this.showOverlays = on;
     this.render();
   }
 
@@ -683,6 +764,8 @@ export class DrawingCanvas {
   undo() {
     if (this.history.undo()) {
       this.annotations = [];
+      this.overlays = [];
+
       this.render();
       this.onChange?.("edit");
     }
@@ -691,6 +774,8 @@ export class DrawingCanvas {
   redo() {
     if (this.history.redo()) {
       this.annotations = [];
+      this.overlays = [];
+
       this.render();
       this.onChange?.("edit");
     }
@@ -698,6 +783,7 @@ export class DrawingCanvas {
 
   clear() {
     this.annotations = [];
+    this.overlays = [];
     this.history.clear();
     this.currentStroke = null;
     this.isErasing = false;

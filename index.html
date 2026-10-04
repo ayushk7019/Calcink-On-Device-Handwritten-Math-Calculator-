@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -20,65 +21,74 @@
           Pen
         </button>
 
-        <button
-          id="eraser"
-          type="button"
-          aria-pressed="false"
-        >
-          Stroke Eraser
-        </button>
+    <button
+      id="eraser"
+      type="button"
+      aria-pressed="false"
+    >
+      Stroke Eraser
+    </button>
 
-        <button
-          id="pixel"
-          type="button"
-          aria-pressed="false"
-        >
-          Pixel Eraser
-        </button>
+    <button
+      id="pixel"
+      type="button"
+      aria-pressed="false"
+    >
+      Pixel Eraser
+    </button>
 
-        <button
-          id="undo"
-          type="button"
-        >
-          Undo
-        </button>
+    <button
+      id="undo"
+      type="button"
+    >
+      Undo
+    </button>
 
-        <button
-          id="redo"
-          type="button"
-        >
-          Redo
-        </button>
+    <button
+      id="redo"
+      type="button"
+    >
+      Redo
+    </button>
 
-        <button
-          id="clear"
-          type="button"
-        >
-          Clear
-        </button>
+    <button
+      id="clear"
+      type="button"
+    >
+      Clear
+    </button>
 
-        <label for="width">
-          Width
-          <input
-            id="width"
-            type="range"
-            min="1"
-            max="12"
-            value="3"
-          />
-        </label>
+    <button
+      id="overlay"
+      type="button"
+      aria-pressed="false"
+    >
+      Show recognition
+    </button>
 
-        <span id="prediction">
-          Model loading...
-        </span>
-      </div>
+    <label for="width">
+      Width
+      <input
+        id="width"
+        type="range"
+        min="1"
+        max="12"
+        value="3"
+      />
+    </label>
 
-      <canvas id="canvas"></canvas>
-    </div>
+    <span id="prediction">
+      Model loading...
+    </span>
+  </div>
 
-    <script
-      type="module"
-      src="/src/main.ts"
-    ></script>
+  <canvas id="canvas"></canvas>
+</div>
+
+<script
+  type="module"
+  src="/src/main.ts"
+></script>
+
   </body>
 </html>

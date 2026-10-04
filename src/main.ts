@@ -5,311 +5,344 @@ import { strokesToImageData } from "./recognition/preprocess";
 import { RecognitionClient } from "./recognition/recognitionClient";
 import { postprocessLabel } from "./recognition/postprocess";
 import {
-  recognizeExpression,
-  type Classifier,
-  type ExpressionResult,
+recognizeExpression,
+type Classifier,
+type ExpressionResult,
 } from "./recognition/pipeline";
 import { answerAnnotation } from "./recognition/answerLayout";
+import { symbolOverlays } from "./recognition/overlayLayout";
 import { RecognitionScheduler } from "./recognition/scheduler";
 import { formatResult } from "./math/evaluate";
 
 const canvas =
-  document.querySelector<HTMLCanvasElement>(
-    "#canvas"
-  );
+document.querySelector<HTMLCanvasElement>(
+"#canvas"
+);
 
 if (!canvas) {
-  throw new Error(
-    "Canvas element not found"
-  );
+throw new Error(
+"Canvas element not found"
+);
 }
 
 const board =
-  new DrawingCanvas(canvas);
+new DrawingCanvas(canvas);
 
 const recognizer =
-  new RecognitionClient();
+new RecognitionClient();
 
 const $ = (
-  id: string
+id: string
 ): HTMLElement => {
-  const element =
-    document.getElementById(id);
+const element =
+document.getElementById(id);
 
-  if (!element) {
-    throw new Error(
-      `Missing element: #${id}`
-    );
-  }
+if (!element) {
+throw new Error(
+`Missing element: #${id}`
+);
+}
 
-  return element;
+return element;
 };
 
 const prediction =
-  $("prediction");
+$("prediction");
 
 const penButton =
-  $("pen") as HTMLButtonElement;
+$("pen") as HTMLButtonElement;
 
 const eraserButton =
-  $("eraser") as HTMLButtonElement;
+$("eraser") as HTMLButtonElement;
 
 const pixelButton =
-  $("pixel") as HTMLButtonElement;
+$("pixel") as HTMLButtonElement;
 
 const undoButton =
-  $("undo") as HTMLButtonElement;
+$("undo") as HTMLButtonElement;
 
 const redoButton =
-  $("redo") as HTMLButtonElement;
+$("redo") as HTMLButtonElement;
 
 const clearButton =
-  $("clear") as HTMLButtonElement;
+$("clear") as HTMLButtonElement;
+
+const overlayButton =
+$("overlay") as HTMLButtonElement;
 
 const widthInput =
-  $("width") as HTMLInputElement;
+$("width") as HTMLInputElement;
 
 const classify: Classifier =
-  async (group) => {
-    const imageData =
-      strokesToImageData(group);
+async (group) => {
+const imageData =
+strokesToImageData(group);
 
-    if (!imageData) {
-      return {
-        label: "?",
-        raw: "?",
-        confidence: 0,
-      };
-    }
-
-    const result =
-      await recognizer.recognize(
-        imageData
-      );
-
-    const label =
-      postprocessLabel(
-        group,
-        result.label
-      );
-
-    return {
-      label,
-      raw: result.label,
-      confidence:
-        result.confidence,
-    };
+if (!imageData) {
+  return {
+    label: "?",
+    raw: "?",
+    confidence: 0,
   };
+}
 
-function show(
-  output: ExpressionResult
-) {
-  if (
-    output.symbols.length === 0
-  ) {
-    board.setAnnotations([]);
-    prediction.textContent = "";
-    return;
-  }
-
-  const annotation =
-    answerAnnotation(output);
-
-  board.setAnnotations(
-    annotation
-      ? [annotation]
-      : []
+const result =
+  await recognizer.recognize(
+    imageData
   );
 
-  if (!output.result) {
-    prediction.textContent =
-      output.text;
-    return;
-  }
+const label =
+  postprocessLabel(
+    group,
+    result.label
+  );
 
-  if (!output.result.ok) {
-    if (
-      output.result.error ===
-      "undefined"
-    ) {
-      prediction.textContent =
-        `${output.text} Undefined`;
-    } else {
-      prediction.textContent =
-        `${output.text} Error`;
-    }
+return {
+  label,
+  raw: result.label,
+  confidence:
+    result.confidence,
+};
 
-    return;
-  }
+};
 
-  const answer =
-    formatResult(
-      output.result.value
-    );
+function show(
+output: ExpressionResult
+) {
+board.setOverlays(
+symbolOverlays(
+output.symbols
+)
+);
 
-  prediction.textContent =
-    `${output.text} ${answer}`;
+if (
+output.symbols.length === 0
+) {
+board.setAnnotations([]);
+prediction.textContent = "";
+return;
+}
+
+const annotation =
+answerAnnotation(output);
+
+board.setAnnotations(
+annotation
+? [annotation]
+: []
+);
+
+if (!output.result) {
+prediction.textContent =
+output.text;
+return;
+}
+
+if (!output.result.ok) {
+if (
+output.result.error ===
+"undefined"
+) {
+prediction.textContent =
+`${output.text} Undefined`;
+} else {
+prediction.textContent =
+`${output.text} Error`;
+}
+
+return;
+
+}
+
+const answer =
+formatResult(
+output.result.value
+);
+
+prediction.textContent =
+`${output.text} ${answer}`;
 }
 
 function showError(
-  error: unknown
+error: unknown
 ) {
-  console.error(error);
+console.error(error);
 
-  board.setAnnotations([]);
+board.setAnnotations([]);
+board.setOverlays([]);
 
-  prediction.textContent =
-    "Recognition failed";
+prediction.textContent =
+"Recognition failed";
 }
 
 const recognizeNow =
-  async (): Promise<ExpressionResult> => {
-    return recognizeExpression(
-      board.getStrokes(),
-      classify
-    );
-  };
+async (): Promise<ExpressionResult> => {
+return recognizeExpression(
+board.getStrokes(),
+classify
+);
+};
 
 const scheduler =
-  new RecognitionScheduler(
-    recognizeNow,
-    show,
-    showError,
-    600
-  );
+new RecognitionScheduler(
+recognizeNow,
+show,
+showError,
+600
+);
 
 const toolButtons = {
-  pen: penButton,
-  eraser: eraserButton,
-  pixel: pixelButton,
+pen: penButton,
+eraser: eraserButton,
+pixel: pixelButton,
 };
 
 function setTool(
-  tool:
-    | "pen"
-    | "eraser"
-    | "pixel"
+tool:
+| "pen"
+| "eraser"
+| "pixel"
 ) {
-  board.setTool(tool);
+board.setTool(tool);
 
-  for (
-    const [name, element] of
-    Object.entries(toolButtons)
-  ) {
-    element.setAttribute(
-      "aria-pressed",
-      String(name === tool)
-    );
-  }
+for (
+const [name, element] of
+Object.entries(toolButtons)
+) {
+element.setAttribute(
+"aria-pressed",
+String(name === tool)
+);
+}
 }
 
 board.onChange = (
-  kind
+kind
 ) => {
-  if (kind === "start") {
-    scheduler.cancel();
-    board.setAnnotations([]);
-    return;
-  }
+if (kind === "start") {
+scheduler.cancel();
+board.setAnnotations([]);
+return;
+}
 
-  scheduler.schedule();
+scheduler.schedule();
 };
 
 penButton.addEventListener(
-  "click",
-  () => {
-    setTool("pen");
-  }
+"click",
+() => {
+setTool("pen");
+}
 );
 
 eraserButton.addEventListener(
-  "click",
-  () => {
-    setTool("eraser");
-  }
+"click",
+() => {
+setTool("eraser");
+}
 );
 
 pixelButton.addEventListener(
-  "click",
-  () => {
-    setTool("pixel");
-  }
+"click",
+() => {
+setTool("pixel");
+}
 );
 
 undoButton.addEventListener(
-  "click",
-  () => {
-    board.undo();
-  }
+"click",
+() => {
+board.undo();
+}
 );
 
 redoButton.addEventListener(
-  "click",
-  () => {
-    board.redo();
-  }
+"click",
+() => {
+board.redo();
+}
 );
 
 clearButton.addEventListener(
-  "click",
-  () => {
-    board.clear();
-    prediction.textContent = "";
-  }
+"click",
+() => {
+board.clear();
+prediction.textContent = "";
+}
+);
+
+overlayButton.addEventListener(
+"click",
+() => {
+const on =
+overlayButton.getAttribute(
+"aria-pressed"
+) !== "true";
+
+overlayButton.setAttribute(
+  "aria-pressed",
+  String(on)
+);
+
+board.setShowOverlays(on);
+
+}
 );
 
 widthInput.addEventListener(
-  "input",
-  () => {
-    const width =
-      Number(widthInput.value);
+"input",
+() => {
+const width =
+Number(widthInput.value);
 
-    if (Number.isFinite(width)) {
-      board.setStrokeWidth(width);
-    }
-  }
+if (Number.isFinite(width)) {
+  board.setStrokeWidth(width);
+}
+
+}
 );
 
 window.addEventListener(
-  "keydown",
-  (event) => {
-    if (
-      (event.ctrlKey ||
-        event.metaKey) &&
-      event.key.toLowerCase() ===
-        "z"
-    ) {
-      event.preventDefault();
+"keydown",
+(event) => {
+if (
+(event.ctrlKey ||
+event.metaKey) &&
+event.key.toLowerCase() ===
+"z"
+) {
+event.preventDefault();
 
-      if (event.shiftKey) {
-        board.redo();
-      } else {
-        board.undo();
-      }
-
-      return;
-    }
-
-    if (
-      (event.ctrlKey ||
-        event.metaKey) &&
-      event.key.toLowerCase() ===
-        "y"
-    ) {
-      event.preventDefault();
-      board.redo();
-    }
+  if (event.shiftKey) {
+    board.redo();
+  } else {
+    board.undo();
   }
+
+  return;
+}
+
+if (
+  (event.ctrlKey ||
+    event.metaKey) &&
+  event.key.toLowerCase() ===
+    "y"
+) {
+  event.preventDefault();
+  board.redo();
+}
+
+}
 );
 
 setTool("pen");
 
 recognizer
-  .ready()
-  .then(() => {
-    prediction.textContent =
-      "Model ready";
-  })
-  .catch((error) => {
-    showError(error);
-  });
+.ready()
+.then(() => {
+prediction.textContent =
+"Model ready";
+})
+.catch((error) => {
+showError(error);
+});
