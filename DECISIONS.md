@@ -11,8 +11,8 @@ CalcInk must recognize handwritten mathematical expressions containing:
 * digits 0-9
 * plus (+)
 * minus (-)
-* multiplication (Ãƒâ€”)
-* division (ÃƒÂ·)
+* multiplication (ÃƒÆ’Ã¢â‚¬â€)
+* division (ÃƒÆ’Ã‚Â·)
 * decimal point (.)
 * equals (=)
 
@@ -101,7 +101,7 @@ TensorFlow.js Layers Model
 
 Input:
 
-100 Ãƒâ€” 100 Ãƒâ€” 3 RGB float32 tensor
+100 ÃƒÆ’Ã¢â‚¬â€ 100 ÃƒÆ’Ã¢â‚¬â€ 3 RGB float32 tensor
 
 Model architecture:
 
@@ -138,9 +138,9 @@ Model output:
 |     9 | 9            |
 |    10 | Add (+)      |
 |    11 | Decimal (.)  |
-|    12 | Division (ÃƒÂ·) |
+|    12 | Division (ÃƒÆ’Ã‚Â·) |
 |    13 | Equals (=)   |
-|    14 | Multiply (Ãƒâ€”) |
+|    14 | Multiply (ÃƒÆ’Ã¢â‚¬â€) |
 |    15 | Minus (-)    |
 |    16 | X            |
 |    17 | Y            |
@@ -161,11 +161,11 @@ The model is stored locally in:
 ```text
 public/models/sagyam/V3/
 
-Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ model.json
-Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ group1-shard1of4.bin
-Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ group1-shard2of4.bin
-Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ group1-shard3of4.bin
-Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ group1-shard4of4.bin
+ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ model.json
+ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ group1-shard1of4.bin
+ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ group1-shard2of4.bin
+ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ group1-shard3of4.bin
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ group1-shard4of4.bin
 ```
 
 The model is loaded inside a dedicated Web Worker.
@@ -203,7 +203,7 @@ group1-shard4of4.bin  1,794,380 bytes
 Total measured model payload:
 
 ```text
-14,481,495 bytes Ã¢â€°Ë† 13.81 MiB
+14,481,495 bytes ÃƒÂ¢Ã¢â‚¬Â°Ã‹â€  13.81 MiB
 ```
 
 The 13.71 MiB value is therefore a parameter-storage calculation, while 13.81 MiB is the measured size of the model files bundled with CalcInk.
@@ -212,7 +212,7 @@ The 13.71 MiB value is therefore a parameter-storage calculation, while 13.81 Mi
 
 ### Original model preprocessing
 
-The reference application reads the canvas as RGB, resizes it to 100 Ãƒâ€” 100 using bilinear interpolation, divides pixel values by 255, and adds a batch dimension.
+The reference application reads the canvas as RGB, resizes it to 100 ÃƒÆ’Ã¢â‚¬â€ 100 using bilinear interpolation, divides pixel values by 255, and adds a batch dimension.
 
 CalcInk deliberately uses a symbol-level preprocessing pipeline instead; see Section 12.
 
@@ -344,33 +344,33 @@ The selected model was chosen using the complete CalcInk architecture, not on mo
 
 ```text
 Pointer input
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Stroke capture
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Stroke history
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Recognition scheduling
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Symbol segmentation
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Per-symbol preprocessing
-      Ã¢â€ â€œ
-100 Ãƒâ€” 100 RGB input
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
+100 ÃƒÆ’Ã¢â‚¬â€ 100 RGB input
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Recognition Web Worker
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 TensorFlow.js Sagyam model
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Per-symbol classification
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Geometric post-processing
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Recognized expression text
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Deterministic arithmetic parser
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Result
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Canvas answer projection
 ```
 
@@ -413,19 +413,19 @@ Symbols:
 ```text
 0 1 2 3 4 5 6 7 8 9
 
-+ - Ãƒâ€” ÃƒÂ· . =
++ - ÃƒÆ’Ã¢â‚¬â€ ÃƒÆ’Ã‚Â· . =
 ```
 
 Multi-stroke symbols were drawn with natural gaps between strokes:
 
 * `+`
 * `=`
-* `ÃƒÂ·`
-* `Ãƒâ€”`
+* `ÃƒÆ’Ã‚Â·`
+* `ÃƒÆ’Ã¢â‚¬â€`
 
 The test also specifically checked:
 
-* Ãƒâ€” versus X
+* ÃƒÆ’Ã¢â‚¬â€ versus X
 * handwritten division versus the model's division form
 * decimal point versus an accidental dot
 * `=` as two separate strokes
@@ -446,8 +446,8 @@ The test also specifically checked:
 | 9      | 9         | 9         | 9         | 9         | 9         | 5/5     |
 | +      | Add       | Add       | Multiply  | Add       | Add       | 4/5     |
 | -      | Minus     | Minus     | Minus     | Minus     | Minus     | 5/5     |
-| Ãƒâ€”      | Multiply  | Multiply  | Multiply  | Multiply  | Multiply  | 5/5     |
-| ÃƒÂ·      | Division  | Division  | Division  | Division  | Division  | 5/5     |
+| ÃƒÆ’Ã¢â‚¬â€      | Multiply  | Multiply  | Multiply  | Multiply  | Multiply  | 5/5     |
+| ÃƒÆ’Ã‚Â·      | Division  | Division  | Division  | Division  | Division  | 5/5     |
 | .      | Decimal   | Decimal   | Decimal   | Decimal   | Decimal   | 5/5     |
 | =      | Equals    | Equals    | Minus     | Equals    | Equals    | 4/5     |
 
@@ -466,7 +466,7 @@ The initial Sagyam screening heuristic was:
 * at least 14 of the 16 symbols should achieve 4/5 or better
 * both `.` and `=` should work
 * persistent `.` or `=` failures would trigger evaluation of the fallback
-* persistent Ãƒâ€” versus X confusion could justify post-processing
+* persistent ÃƒÆ’Ã¢â‚¬â€ versus X confusion could justify post-processing
 
 Result:
 
@@ -490,7 +490,7 @@ Reasons:
 * browser-side TensorFlow.js inference
 * local model assets
 * Web Worker inference
-* 100 Ãƒâ€” 100 Ãƒâ€” 3 input
+* 100 ÃƒÆ’Ã¢â‚¬â€ 100 ÃƒÆ’Ã¢â‚¬â€ 3 input
 * 19-class output containing the 16 required CalcInk symbols
 * straightforward per-symbol classification
 * successful local integration
@@ -548,11 +548,11 @@ A roughly horizontal and a roughly vertical stroke are grouped as `+` only when 
 
 A small crossing tolerance prevents nearby independent strokes from being merged.
 
-### Multiply (`Ãƒâ€”`)
+### Multiply (`ÃƒÆ’Ã¢â‚¬â€`)
 
-Two roughly diagonal strokes can form `Ãƒâ€”` when they cross near their centers.
+Two roughly diagonal strokes can form `ÃƒÆ’Ã¢â‚¬â€` when they cross near their centers.
 
-### Division (`ÃƒÂ·`)
+### Division (`ÃƒÆ’Ã‚Â·`)
 
 A division symbol can contain:
 
@@ -581,11 +581,11 @@ Groups are sorted left to right by center x.
 ```text
 strokes
 
-   Ã¢â€ â€œ
+   ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 [group for 1] [group for +] [group for 2] [group for =]
 
-   Ã¢â€ â€œ
+   ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 1 + 2 =
 ```
@@ -599,10 +599,10 @@ Post-processing handles geometric cases where the raw model label is not suffici
 Current rules include:
 
 ```text
-two horizontal strokes  Ã¢â€ â€™ =
-one horizontal stroke   Ã¢â€ â€™ -
+two horizontal strokes  ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ =
+one horizontal stroke   ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ -
 
-valid division layout    Ã¢â€ â€™ ÃƒÂ·
+valid division layout    ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ÃƒÆ’Ã‚Â·
 ```
 
 Post-processing uses stroke geometry and never calls the arithmetic evaluator to guess a symbol.
@@ -642,51 +642,51 @@ Instead, each symbol group is rendered onto an offscreen canvas with an explicit
 ```text
 Symbol group strokes
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 Bounding box
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 Square crop
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 Expanded margin
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 Render with uniform scale
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 White background + black ink
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 Constant output ink thickness
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
-100 Ãƒâ€” 100 RGB ImageData
+100 ÃƒÆ’Ã¢â‚¬â€ 100 RGB ImageData
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 Transfer to worker
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 Float32 tensor
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 pixel / 255
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 [1, 100, 100, 3]
 
-        Ã¢â€ â€œ
+        ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 
 Sagyam model
 ```
@@ -695,7 +695,7 @@ The current preprocessing configuration uses a nominal output ink thickness of 7
 
 ### Why this differs from the original application
 
-The original application resizes its complete 400 Ãƒâ€” 400 canvas to 100 Ãƒâ€” 100.
+The original application resizes its complete 400 ÃƒÆ’Ã¢â‚¬â€ 400 canvas to 100 ÃƒÆ’Ã¢â‚¬â€ 100.
 
 CalcInk uses a full-window canvas containing comparatively small symbols, so resizing the whole canvas would shrink symbols and can make their strokes too thin.
 
@@ -709,7 +709,7 @@ The earlier crop already had a surrounding margin.
 
 A larger effective margin was added and tested as a single fixed configuration rather than as a sweep of values.
 
-Approximate symbol occupancy of the final 100 Ãƒâ€” 100 image changed from:
+Approximate symbol occupancy of the final 100 ÃƒÆ’Ã¢â‚¬â€ 100 image changed from:
 
 ```text
 ~83%
@@ -725,8 +725,8 @@ Measured results:
 
 | Expression   | Before | After |
 | ------------ | -----: | ----: |
-| `100ÃƒÂ·0=`     |    1/5 |   5/5 |
-| `2+3Ãƒâ€”4-6ÃƒÂ·2=` |    2/5 |   4/5 |
+| `100ÃƒÆ’Ã‚Â·0=`     |    1/5 |   5/5 |
+| `2+3ÃƒÆ’Ã¢â‚¬â€4-6ÃƒÆ’Ã‚Â·2=` |    2/5 |   4/5 |
 
 These were small samples from different drawing sessions, and the tested expressions were part of the tuning process.
 
@@ -749,7 +749,7 @@ Grammar:
 ```text
 expr   := term (('+' | '-') term)*
 
-term   := unary (('Ãƒâ€”' | 'ÃƒÂ·') unary)*
+term   := unary (('ÃƒÆ’Ã¢â‚¬â€' | 'ÃƒÆ’Ã‚Â·') unary)*
 
 unary  := '-' unary | number
 
@@ -758,7 +758,7 @@ number := digits with at most one '.', at least one digit
 
 Precedence follows directly from the grammar:
 
-* Ãƒâ€” and ÃƒÂ· bind tighter than + and -
+* ÃƒÆ’Ã¢â‚¬â€ and ÃƒÆ’Ã‚Â· bind tighter than + and -
 * operators are left-associative
 * unary minus binds to a following number or unary expression
 
@@ -769,8 +769,8 @@ Supported:
 * negative numbers
 * `+`
 * `-`
-* `Ãƒâ€”`
-* `ÃƒÂ·`
+* `ÃƒÆ’Ã¢â‚¬â€`
+* `ÃƒÆ’Ã‚Â·`
 * terminal `=`
 
 The evaluator supports expressions such as:
@@ -778,7 +778,7 @@ The evaluator supports expressions such as:
 ```text
 5--3
 
-5Ãƒâ€”-3
+5ÃƒÆ’Ã¢â‚¬â€-3
 ```
 
 ### Error handling
@@ -799,7 +799,7 @@ Examples include:
 
 ```text
 2++3
-2Ãƒâ€”ÃƒÂ·3
+2ÃƒÆ’Ã¢â‚¬â€ÃƒÆ’Ã‚Â·3
 1.2.3
 ```
 
@@ -815,17 +815,17 @@ Recognition runs automatically after writing.
 
 ```text
 Stroke committed
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 600 ms debounce
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Recognition
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Expression evaluation
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 Answer projection
 ```
 
-The debounce allows multi-stroke symbols such as `=`, `+`, and `ÃƒÂ·` to finish before recognition.
+The debounce allows multi-stroke symbols such as `=`, `+`, and `ÃƒÆ’Ã‚Â·` to finish before recognition.
 
 Each scheduled recognition run receives a version number.
 
@@ -848,10 +848,26 @@ When the recognized expression ends with `=`, the expression is evaluated and th
 Example:
 
 ```text
-18 + 4 Ãƒâ€” 3 = 30
+18 + 4 ÃƒÆ’Ã¢â‚¬â€ 3 = 30
 ```
 
 The answer is an annotation layer rather than a user stroke.
+
+### Recognition Overlay
+
+CalcInk includes an optional recognition overlay that is **off by default**.
+
+When enabled, each recognized symbol is shown with a thin dashed bounding box and a label containing the recognized symbol and the model-reported confidence percentage, for example 7 92%.
+
+Confidence levels are displayed as:
+
+- >= 90% -> high -> green
+- 60-89% -> medium -> amber
+- < 60% -> low -> red
+
+The overlay is a visual usability and debugging aid. The displayed confidence is the model-reported softmax confidence and is **not a guarantee that the recognition is correct**. The model can be highly confident in an incorrect classification.
+
+The overlay does not modify the recognition pipeline, segmentation, preprocessing, or arithmetic evaluation. It is rendered separately from the handwriting stroke state.
 
 It:
 
@@ -888,15 +904,15 @@ After recognition, segmentation, and preprocessing tuning, a fresh expression-le
 | Expression  | Correct |
 | ----------- | ------: |
 | `9-4=`      |     2/3 |
-| `6Ãƒâ€”7=`      |     3/3 |
-| `8ÃƒÂ·4=`      |     3/3 |
+| `6ÃƒÆ’Ã¢â‚¬â€7=`      |     3/3 |
+| `8ÃƒÆ’Ã‚Â·4=`      |     3/3 |
 | `3.2+1.8=`  |     3/3 |
-| `25Ãƒâ€”4=`     |     3/3 |
+| `25ÃƒÆ’Ã¢â‚¬â€4=`     |     3/3 |
 | `100-37=`   |     3/3 |
-| `7+8ÃƒÂ·2=`    |     3/3 |
-| `6Ãƒâ€”3-4=`    |     3/3 |
-| `0.5Ãƒâ€”6=`    |     3/3 |
-| `36ÃƒÂ·9+2.5=` |     3/3 |
+| `7+8ÃƒÆ’Ã‚Â·2=`    |     3/3 |
+| `6ÃƒÆ’Ã¢â‚¬â€3-4=`    |     3/3 |
+| `0.5ÃƒÆ’Ã¢â‚¬â€6=`    |     3/3 |
+| `36ÃƒÆ’Ã‚Â·9+2.5=` |     3/3 |
 
 Exact recognized-text accuracy:
 
@@ -955,7 +971,7 @@ Result:
 Therefore the raw log contains:
 
 ```text
-9-4= Ã¢â€ â€™ 3 passed, 1 failed
+9-4= ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ 3 passed, 1 failed
 ```
 
 The additional attempt is excluded from the official 30-run denominator.
@@ -963,7 +979,7 @@ The additional attempt is excluded from the official 30-run denominator.
 One accidental:
 
 ```text
-25Ãƒâ€”6=
+25ÃƒÆ’Ã¢â‚¬â€6=
 ```
 
 run was also recorded.
@@ -1015,7 +1031,7 @@ A tiny accidental pen mark can become a decimal point.
 
 ### Very small symbols
 
-Below approximately 8 px, the components of `ÃƒÂ·` can become difficult to separate reliably.
+Below approximately 8 px, the components of `ÃƒÆ’Ã‚Â·` can become difficult to separate reliably.
 
 ### Segmentation thresholds
 
@@ -1069,11 +1085,11 @@ For each pointer position:
 
 ```text
 pointer position
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 point-to-segment distance
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 stroke hit test
-      Ã¢â€ â€œ
+      ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“
 stroke id collected
 ```
 
@@ -1156,7 +1172,7 @@ precache   12 entries
 The total generated precache payload was:
 
 ```text
-15,666.36 KiB Ã¢â€°Ë† 15.3 MiB
+15,667.59 KiB ÃƒÂ¢Ã¢â‚¬Â°Ã‹â€  15.3 MiB
 ```
 
 This is the first-visit precached application payload, including the application assets and bundled model files; it is not the model-only size.
@@ -1213,7 +1229,7 @@ The deployed application was opened in Chrome and allowed to finish loading.
 Offline mode was then enabled using:
 
 ```text
-Chrome DevTools Ã¢â€ â€™ Network Ã¢â€ â€™ Offline
+Chrome DevTools ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Network ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Offline
 ```
 
 With the network disabled, the same deployed URL was reloaded.
@@ -1228,7 +1244,7 @@ The following was verified:
 
 Result:
 
-**PASS Ã¢â‚¬â€ the deployed CalcInk application operates without network connectivity after the required application assets and model files have been cached.**
+**PASS ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the deployed CalcInk application operates without network connectivity after the required application assets and model files have been cached.**
 
 This directly verifies the deployed application's offline behavior, in addition to the earlier local stopped-server test.
 
@@ -1254,7 +1270,7 @@ The automated suite currently covers:
 
 Current status:
 
-**113 tests across 12 test files, all passing**
+**125 tests across 13 test files, all passing**
 
 Latest verified production build:
 
@@ -1314,7 +1330,7 @@ The following application behaviors have been manually verified:
 12. fast pixel-eraser dragging without visible skipped sections
 13. recognition updating after erasing
 14. local offline loading after the preview server was stopped
-15. deployed application loading offline using Chrome DevTools Network Ã¢â€ â€™ Offline
+15. deployed application loading offline using Chrome DevTools Network ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Offline
 16. deployed handwritten recognition while offline
 17. deployed answer projection while offline
 
@@ -1365,7 +1381,7 @@ Chrome Frame Rendering Stats were used during a manual drawing test.
 Observed:
 
 ```text
-typical / sustained Ã¢â€°Ë† 58 FPS
+typical / sustained ÃƒÂ¢Ã¢â‚¬Â°Ã‹â€  58 FPS
 
 maximum              = 60.2 FPS
 
@@ -1389,11 +1405,11 @@ A Chrome Performance recording covered approximately:
 The observed metrics were:
 
 ```text
-JS heap        = 3.6Ã¢â‚¬â€œ4.7 MB
+JS heap        = 3.6ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“4.7 MB
 
-Documents      = 1Ã¢â‚¬â€œ1
+Documents      = 1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“1
 
-Listeners      = 21Ã¢â‚¬â€œ21
+Listeners      = 21ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“21
 ```
 
 The JS heap repeatedly increased and decreased during the session instead of showing a continuous upward trend.
@@ -1413,7 +1429,7 @@ Two local browser measurements reported:
 ```text
 LCP = 0.12 s
 
-INP = 32Ã¢â‚¬â€œ48 ms
+INP = 32ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“48 ms
 ```
 
 A separate Performance recording also reported:
@@ -1431,32 +1447,32 @@ These browser metrics were collected locally on one device and are not presented
 ```text
 src/
 
-Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ canvas/
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ drawingCanvas.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ history.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ coordinates.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ hitTest.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ pixelErase.ts
-Ã¢â€â€š   Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ types.ts
-Ã¢â€â€š
-Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ recognition/
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ geometry.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ segment.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ preprocess.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ postprocess.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ pipeline.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ recognitionClient.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ vocabulary.ts
-Ã¢â€â€š   Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ answerLayout.ts
-Ã¢â€â€š   Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ scheduler.ts
-Ã¢â€â€š
-Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ worker/
-Ã¢â€â€š   Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ recognition.worker.ts
-Ã¢â€â€š
-Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ math/
-Ã¢â€â€š   Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ evaluate.ts
-Ã¢â€â€š
-Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ main.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ canvas/
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ drawingCanvas.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ history.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ coordinates.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ hitTest.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ pixelErase.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ types.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
+ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ recognition/
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ geometry.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ segment.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ preprocess.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ postprocess.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ pipeline.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ recognitionClient.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ vocabulary.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ answerLayout.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ scheduler.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
+ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ worker/
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ recognition.worker.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
+ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ math/
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡   ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ evaluate.ts
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬Å¡
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ main.ts
 ```
 
 Additional project files include:
@@ -1464,22 +1480,22 @@ Additional project files include:
 ```text
 public/
 
-Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ models/
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ models/
 
-    Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ sagyam/
+    ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ sagyam/
 
-        Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ NOTICE.md
-        Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ V3/
+        ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ NOTICE.md
+        ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ V3/
 
-            Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ model.json
-            Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ group1-shard1of4.bin
-            Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ group1-shard2of4.bin
-            Ã¢â€Å“Ã¢â€â‚¬Ã¢â€â‚¬ group1-shard3of4.bin
-            Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ group1-shard4of4.bin
+            ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ model.json
+            ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ group1-shard1of4.bin
+            ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ group1-shard2of4.bin
+            ÃƒÂ¢Ã¢â‚¬ÂÃ…â€œÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ group1-shard3of4.bin
+            ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ group1-shard4of4.bin
 
 docs/
 
-Ã¢â€â€Ã¢â€â‚¬Ã¢â€â‚¬ eval-fresh-set.txt
+ÃƒÂ¢Ã¢â‚¬ÂÃ¢â‚¬ÂÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ eval-fresh-set.txt
 
 DECISIONS.md
 
@@ -1577,7 +1593,7 @@ The README contains the live deployed demo URL and the current project status.
 * recognition latency measurement
 * drawing performance measurement
 * memory stability measurement
-* 113 automated tests
+* 125 automated tests
 * successful production build
 
 ### Final pre-submission work
@@ -1608,7 +1624,7 @@ npm run build
 Then verify:
 
 ```text
-[x] 113 tests passing
+[x] 125 tests passing
 
 [x] production build succeeds
 
